@@ -18,13 +18,14 @@ import com.minem.diars.app.model.common.ChronogramModel;
 import com.minem.diars.app.model.entity.ChronogramDetailEntity;
 import com.minem.diars.app.model.entity.ChronogramEntity;
 import com.minem.diars.app.model.entity.EmployeeEntity;
+import com.minem.diars.app.model.entity.MiningEntity;
 import com.minem.diars.app.repository.ChronogramDetailRepository;
 import com.minem.diars.app.repository.ChronogramRepository;
 import com.minem.diars.app.repository.EmployeeRepository;
-import com.minem.diars.app.util.constants.ChronogramConstants;
+import com.minem.diars.app.repository.MiningRepository;
 import com.minem.diars.app.util.constants.MinemConstants;
 
-@Component(ChronogramConstants.CORE)
+@Component(MinemConstants.CHRONOGRAM_CORE)
 public class ChronogramCore {
 	
 	@Autowired
@@ -39,6 +40,10 @@ public class ChronogramCore {
 	@Qualifier(MinemConstants.CHRONOGRAM_DETAIL_REPOSITORY)
 	private ChronogramDetailRepository chronogramDetailRepository;
 	
+	@Autowired
+	@Qualifier(MinemConstants.MINING_REPOSITORY)
+	private MiningRepository miningRepository;
+	
 	public ChronogramModel saveChronogram(ChronogramRegisterRequest request) {
 		
 		ChronogramModel response = null;
@@ -50,6 +55,8 @@ public class ChronogramCore {
 			ChronogramEntity chronogram = buildChronogramEntity(request.getChronogram());
 			
 			chronogram = buildChronogramDetailEntity(chronogram, request.getChronogramDatails());
+			
+			chronogram = buildMiningEntity(chronogram, request.getChronogram().getMiningCode());
 			
 			chronogram.setEmployee(employee);
 			
@@ -73,6 +80,13 @@ public class ChronogramCore {
 			
 		}
 		
+	}
+
+	private ChronogramEntity buildMiningEntity(ChronogramEntity chronogram, String miningCode) {
+		MiningEntity mining = miningRepository.findById(Integer.parseInt(miningCode)).get();
+		chronogram.setMining(mining);
+		mining.getChronograms().add(chronogram);
+		return chronogram;
 	}
 
 	private ChronogramEntity buildChronogramDetailEntity(ChronogramEntity chronogram,
@@ -134,8 +148,8 @@ public class ChronogramCore {
 	}
 
 	private Chronogram filterChronogram(ChronogramEntity ent) {
-		String[] iDate = ent.getInitialDate().split(MinemConstants.SLASH);
-		LocalDate iLocalDate = LocalDate.of(Integer.parseInt(iDate[2]), Integer.parseInt(iDate[1]), Integer.parseInt(iDate[0]));
+		String[] iDate = ent.getInitialDate().split(MinemConstants.HYPHEN);
+		LocalDate iLocalDate = LocalDate.of(Integer.parseInt(iDate[0]), Integer.parseInt(iDate[1]), Integer.parseInt(iDate[2]));
 		LocalDate currentDate = LocalDate.now();
 		
 		if (iLocalDate.isAfter(currentDate) || iLocalDate.isEqual(currentDate)) {

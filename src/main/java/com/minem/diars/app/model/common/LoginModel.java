@@ -10,6 +10,6 @@ import lombok.ToString;
 public class LoginModel {
 	
 	private String employeeCode;
-	private String employeeName;
+	private String employeeFullName;
 
 }

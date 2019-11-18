@@ -37,6 +37,9 @@ public class EmployeeEntity {
 	@Column(name = "lastname")
 	private String lastname;
 	
+	@Column(name = "fullname")
+	private String fullname;
+	
 	@Column(name = "dni")
 	private String dni;
 	

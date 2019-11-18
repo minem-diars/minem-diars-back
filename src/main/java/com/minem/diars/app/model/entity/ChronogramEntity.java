@@ -47,9 +47,6 @@ public class ChronogramEntity {
 	@Column(name = "mining_code")
 	private String miningCode;
 	
-	@Column(name = "state", columnDefinition = "varchar(1) default '2'")
-	private String state;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_employee", nullable = false)
 	private EmployeeEntity employee;
@@ -63,5 +60,10 @@ public class ChronogramEntity {
 			cascade = CascadeType.ALL,
 			mappedBy = "chronogram")
 	private ProgramEntity program;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_mining", nullable = false)
+	private MiningEntity mining;
+	
 
 }

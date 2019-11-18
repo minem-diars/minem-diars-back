@@ -11,7 +11,8 @@ public class LoginResponse extends RestResponse {
 	
 	private String description;
 	private String employeeCode;
-	private String employeeName;
+	private String employeeFullName;
+	
 //	private String userRol;
 
 }

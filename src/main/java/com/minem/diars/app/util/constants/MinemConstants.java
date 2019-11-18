@@ -10,14 +10,26 @@ public class MinemConstants {
 	public static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
 	public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 	
+	/* Service */
+	public static final String CHRONOGRAM_SERVICE = "chronogramService";
+	
+	public static final String COMMON_SERVICE = "commonService";
+	
+	/* Repository */
 	public static final String EMPLOYEE_REPOSITORY = "employeeRepository";
 	public static final String CREDENTIAL_REPOSITORY = "credentialRepository";
 	public static final String CHRONOGRAM_REPOSITORY = "chronogramRepository";
 	public static final String CHRONOGRAM_DETAIL_REPOSITORY = "chronogramDetailRepository";
 	public static final String PROGRAM_REPOSITORY = "programRepository";
+	public static final String MINING_REPOSITORY = "miningRepository";
+	
+	/* Core */
+	public static final String CHRONOGRAM_CORE = "chronogramCore";
+	
+	public static final String COMMON_CORE = "commonCore";
 	
 	/* Signos */
 	public static final String COMMA = ",";
-	public static final String SLASH = "/";	
+	public static final String HYPHEN = "-";	
 
 }

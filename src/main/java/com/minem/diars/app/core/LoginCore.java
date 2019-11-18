@@ -33,7 +33,7 @@ public class LoginCore {
 			LoginModel response = new LoginModel();
 			
 			response.setEmployeeCode(entity.getEmployee().getIdEmployee().toString());
-			response.setEmployeeName(entity.getEmployee().getName());
+			response.setEmployeeFullName(entity.getEmployee().getFullname());
 			
 			return response;
 		}

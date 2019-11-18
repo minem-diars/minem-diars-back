@@ -2,7 +2,7 @@ package com.minem.diars.app.model.api.response;
 
 import java.util.List;
 
-import com.minem.diars.app.model.bean.Chronogram;
+import com.minem.diars.app.model.bean.Mining;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +11,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CheckChronogramResponse {
+public class FindMiningResponse extends RestResponse {
 	
-	private String employeeName;
-	private List<Chronogram> chronograms;
-	
+	private List<Mining> minings;	
+
 }

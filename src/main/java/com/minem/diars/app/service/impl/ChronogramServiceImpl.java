@@ -15,11 +15,11 @@ import com.minem.diars.app.util.constants.ChronogramConstants;
 import com.minem.diars.app.util.constants.ErrorConstant;
 import com.minem.diars.app.util.constants.MinemConstants;
 
-@Service(ChronogramConstants.SERVICE)
+@Service(MinemConstants.CHRONOGRAM_SERVICE)
 public class ChronogramServiceImpl implements ChronogramService {
 	
 	@Autowired
-	@Qualifier(ChronogramConstants.CORE)
+	@Qualifier(MinemConstants.CHRONOGRAM_CORE)
 	private ChronogramCore chronogramCore;
 
 	@Override

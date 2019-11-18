@@ -14,7 +14,7 @@ import com.minem.diars.app.model.api.request.ChronogramRegisterRequest;
 import com.minem.diars.app.model.api.response.CheckChronogramResponse;
 import com.minem.diars.app.model.api.response.ChronogramRegisterResponse;
 import com.minem.diars.app.service.ChronogramService;
-import com.minem.diars.app.util.constants.ChronogramConstants;
+import com.minem.diars.app.util.constants.MinemConstants;
 
 @RestController
 @RequestMapping("/travel/chronogram/v1/")
@@ -22,7 +22,7 @@ import com.minem.diars.app.util.constants.ChronogramConstants;
 public class ChronogramController {
 	
 	@Autowired
-	@Qualifier(ChronogramConstants.SERVICE)
+	@Qualifier(MinemConstants.CHRONOGRAM_SERVICE)
 	private ChronogramService chronogramService;
 	
 	@PostMapping("register")
