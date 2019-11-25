@@ -2,6 +2,8 @@ package com.minem.diars.app.core;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.minem.diars.app.model.api.request.ChronogramRegisterRequest;
 import com.minem.diars.app.model.api.response.CheckChronogramResponse;
+import com.minem.diars.app.model.api.response.FindChronogramResponse;
 import com.minem.diars.app.model.bean.Chronogram;
 import com.minem.diars.app.model.bean.ChronogramDatail;
 import com.minem.diars.app.model.bean.ChronogramInformation;
@@ -54,15 +57,17 @@ public class ChronogramCore {
 			
 			ChronogramEntity chronogram = buildChronogramEntity(request.getChronogram());
 			
-			chronogram = buildChronogramDetailEntity(chronogram, request.getChronogramDatails());
-			
-			chronogram = buildMiningEntity(chronogram, request.getChronogram().getMiningCode());
+			buildChronogramDetailEntity(chronogram, request.getChronogramDatails());
 			
 			chronogram.setEmployee(employee);
 			
 			employee.getChronograms().add(chronogram);
 			
 			employeeRepository.save(employee);
+			
+			ChronogramEntity chronogramForMining = obtainChronogramForUpdate(Integer.parseInt(request.getCommissioner().getEmployeeCode()));
+
+			buildMiningEntity(chronogramForMining, request.getChronogram().getMiningCode());
 			
 			response = new ChronogramModel();
 			
@@ -82,14 +87,36 @@ public class ChronogramCore {
 		
 	}
 
-	private ChronogramEntity buildMiningEntity(ChronogramEntity chronogram, String miningCode) {
+	private ChronogramEntity obtainChronogramForUpdate(int parseInt) {
+		Iterator<ChronogramEntity> itChronogram = employeeRepository.findById(parseInt).get().getChronograms().iterator();
+		List<ChronogramEntity> listChronogram = new ArrayList<ChronogramEntity>();
+		while (itChronogram.hasNext()) {
+			listChronogram.add(itChronogram.next());
+		}
+		return obtainChronogram(listChronogram);
+	}
+	
+	private ChronogramEntity obtainChronogram(List<ChronogramEntity> listChronogram) {
+		
+		Collections.sort(listChronogram, new Comparator<ChronogramEntity>() {
+			@Override
+			public int compare(ChronogramEntity o1, ChronogramEntity o2) {
+				return new Integer(o1.getIdChronogram()).compareTo(new Integer(o2.getIdChronogram()));
+			}
+			
+		});
+		
+		return listChronogram.get(listChronogram.size() - 1);
+	}
+
+	private void buildMiningEntity(ChronogramEntity chronogram, String miningCode) {
 		MiningEntity mining = miningRepository.findById(Integer.parseInt(miningCode)).get();
 		chronogram.setMining(mining);
 		mining.getChronograms().add(chronogram);
-		return chronogram;
+		chronogramRepository.save(chronogram);
 	}
 
-	private ChronogramEntity buildChronogramDetailEntity(ChronogramEntity chronogram,
+	private void buildChronogramDetailEntity(ChronogramEntity chronogram,
 			List<ChronogramDatail> chronogramDatails) {
 		
 		for(ChronogramDatail obj : chronogramDatails) {
@@ -108,7 +135,6 @@ public class ChronogramCore {
 			
 		}
 		
-		return chronogram;
 	}
 
 	private ChronogramEntity buildChronogramEntity(ChronogramInformation chronogram) {
@@ -118,10 +144,11 @@ public class ChronogramCore {
 		response.setInitialDate(chronogram.getInitialDate());
 		response.setFinalDate(chronogram.getFinalDate());
 		response.setDays(chronogram.getDays());
-		response.setMiningCode(chronogram.getMiningCode());
 		
 		return response;
 	}
+	
+	
 	
 	public CheckChronogramResponse findChronograms(String employeeCode) {
 		EmployeeEntity employee = employeeRepository.findById(Integer.parseInt(employeeCode)).get();
@@ -140,7 +167,7 @@ public class ChronogramCore {
 		
 		CheckChronogramResponse response = new CheckChronogramResponse();
 		
-		response.setEmployeeName(employee.getName());
+		response.setEmployeeName(employee.getFullname());
 		response.setChronograms(listChronograms);
 		
 		return response;
@@ -162,15 +189,29 @@ public class ChronogramCore {
 
 	private Chronogram buildChronogram(ChronogramEntity ent) {
 		
-		Chronogram response = new Chronogram();
+		Chronogram response = null;
 		
-		response.setChronogramCode(String.valueOf(ent.getIdChronogram()));
-		response.setMiningEntity(ent.getMiningCode());
-		response.setInitialDate(ent.getInitialDate());
-		response.setFinalDate(ent.getFinalDate());
+		if (ent.getProgram() == null) {
+			response = new Chronogram();
+			response.setChronogramCode(String.valueOf(ent.getIdChronogram()));
+			response.setInitialDate(ent.getInitialDate());
+			response.setFinalDate(ent.getFinalDate());
+			response.setMiningEntity(ent.getMining().getName());
+		}
 		
 		return response;
 		
+	}
+
+	public FindChronogramResponse findChronogram(String chronogramCode) {
+		FindChronogramResponse response = null;
+		ChronogramEntity ent = chronogramRepository.findById(Integer.parseInt(chronogramCode)).get();
+		if (ent != null) {
+			response = new FindChronogramResponse();
+			response.setEmployeeName(ent.getEmployee().getFullname());
+			response.setChronogram(buildChronogram(ent));
+		}
+		return response;
 	}
 
 }

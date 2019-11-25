@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.minem.diars.app.model.api.request.ProgramRegisterRequest;
+import com.minem.diars.app.model.api.request.UpdateStateRequest;
 import com.minem.diars.app.model.api.response.CheckProgramResponse;
+import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.ProgramRegisterResponse;
+import com.minem.diars.app.model.api.response.UpdateStateResponse;
 import com.minem.diars.app.service.ProgramService;
 import com.minem.diars.app.util.constants.ProgramConstant;
 
@@ -25,16 +28,25 @@ public class ProgramController {
 	@Qualifier(ProgramConstant.SERVICE)
 	private ProgramService programService;
 	
-	@PostMapping(value = "register")
+	@PostMapping("register")
 	public ProgramRegisterResponse postRegisterProgram(@RequestBody ProgramRegisterRequest request) {
 		return this.programService.registerProgram(request);
 	}
 	
-	@GetMapping("consult/{employeeCode}")
-	public CheckProgramResponse getCheckProgram(@PathVariable("employeeCode") Integer employeeCode) {
-		return this.programService.checkProgram(employeeCode);
+	@GetMapping("consult/{employeeCode}/{role}")
+	public CheckProgramResponse getCheckProgram(@PathVariable("employeeCode") Integer employeeCode,
+												@PathVariable("role") String role) {
+		return this.programService.checkProgram(employeeCode, role);
 	}
 	
+	@GetMapping("consult/evaluate/{programCode}")
+	public FindForEvaluateResponse getProgram(@PathVariable("programCode") Integer programCode) {
+		return this.programService.findProgram(programCode);
+	}
 	
+	@PostMapping("update/state")
+	public UpdateStateResponse updateState(@RequestBody UpdateStateRequest request) {
+		return this.programService.updateProgramState(request);
+	}
 
 }

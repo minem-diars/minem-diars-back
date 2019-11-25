@@ -6,8 +6,11 @@ import org.springframework.stereotype.Service;
 
 import com.minem.diars.app.core.ProgramCore;
 import com.minem.diars.app.model.api.request.ProgramRegisterRequest;
+import com.minem.diars.app.model.api.request.UpdateStateRequest;
 import com.minem.diars.app.model.api.response.CheckProgramResponse;
+import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.ProgramRegisterResponse;
+import com.minem.diars.app.model.api.response.UpdateStateResponse;
 import com.minem.diars.app.model.common.ProgramModel;
 import com.minem.diars.app.service.ProgramService;
 import com.minem.diars.app.util.constants.ErrorConstant;
@@ -25,7 +28,7 @@ public class ProgramServiceImpl implements ProgramService {
 	public ProgramRegisterResponse registerProgram(ProgramRegisterRequest request) {
 
 		if (!request.isNull()) {
-			ProgramModel model = programCore.saveProgram(request);
+			ProgramModel model = this.programCore.saveProgram(request);
 			return validateRegisterStatus(model);
 		} else {
 			ProgramRegisterResponse response = new ProgramRegisterResponse();
@@ -60,10 +63,41 @@ public class ProgramServiceImpl implements ProgramService {
 	}
 
 	@Override
-	public CheckProgramResponse checkProgram(Integer employeeCode) {
+	public CheckProgramResponse checkProgram(Integer employeeCode, String role) {
 		
-		CheckProgramResponse response = programCore.findPrograms(employeeCode);
+		CheckProgramResponse response = this.programCore.findPrograms(employeeCode, role);
+
+		if (response != null) {
+			return response;
+		} else {
+			response = new CheckProgramResponse();
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("CG-0003");
+			response.setErrorMessage("Error al obtener lista de programaciones de viaje.");
+			return response;			
+		}
 		
+		
+	}
+
+	@Override
+	public FindForEvaluateResponse findProgram(Integer programCode) {
+		FindForEvaluateResponse response = this.programCore.obtainProgram(programCode); 
+		if (response != null) {
+			return response;
+		} else {
+			response = new FindForEvaluateResponse();
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("CG-0004");
+			response.setErrorMessage("Error al obtener programación de viaje.");
+			return response;	
+		}
+		
+	}
+
+	@Override
+	public UpdateStateResponse updateProgramState(UpdateStateRequest request) {
+		UpdateStateResponse response = this.programCore.updateProgram(request);
 		return response;
 	}
 

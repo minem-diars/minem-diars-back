@@ -8,5 +8,7 @@ import com.minem.diars.app.util.constants.MinemConstants;
 
 @Repository(MinemConstants.CHRONOGRAM_REPOSITORY)
 public interface ChronogramRepository extends JpaRepository<ChronogramEntity, Integer> {
+	
+	ChronogramEntity findByNameService(String nameService);
 
 }

@@ -44,9 +44,6 @@ public class ChronogramEntity {
 	@Column(name = "days")
 	private Integer days;
 	
-	@Column(name = "mining_code")
-	private String miningCode;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_employee", nullable = false)
 	private EmployeeEntity employee;
@@ -62,7 +59,7 @@ public class ChronogramEntity {
 	private ProgramEntity program;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_mining", nullable = false)
+	@JoinColumn(name = "id_mining", nullable = true)
 	private MiningEntity mining;
 	
 

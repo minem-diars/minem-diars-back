@@ -1,5 +1,7 @@
 package com.minem.diars.app.model.api.response;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,7 +14,6 @@ public class LoginResponse extends RestResponse {
 	private String description;
 	private String employeeCode;
 	private String employeeFullName;
-	
-//	private String userRol;
+	private List<String> userRol;
 
 }

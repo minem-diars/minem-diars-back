@@ -11,7 +11,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CheckChronogramResponse {
+public class CheckChronogramResponse extends RestResponse {
 	
 	private String employeeName;
 	private List<Chronogram> chronograms;

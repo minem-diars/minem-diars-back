@@ -31,5 +31,10 @@ public class MinemConstants {
 	/* Signos */
 	public static final String COMMA = ",";
 	public static final String HYPHEN = "-";	
+	
+	/* Roles */
+	public static final String ROLE_D_ADMIN = "ROLE_D_ADMIN";
+	public static final String ROLE_V_ADMIN = "ROLE_V_ADMIN";
+	
 
 }

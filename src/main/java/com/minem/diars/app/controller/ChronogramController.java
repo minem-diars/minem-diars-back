@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.minem.diars.app.model.api.request.ChronogramRegisterRequest;
 import com.minem.diars.app.model.api.response.CheckChronogramResponse;
 import com.minem.diars.app.model.api.response.ChronogramRegisterResponse;
+import com.minem.diars.app.model.api.response.FindChronogramResponse;
 import com.minem.diars.app.service.ChronogramService;
 import com.minem.diars.app.util.constants.MinemConstants;
 
@@ -33,6 +34,11 @@ public class ChronogramController {
 	@GetMapping("consult/{employeeCode}")
 	public CheckChronogramResponse getCheckChronogram(@PathVariable("employeeCode") String employeeCode) {
 		return this.chronogramService.checkChronogram(employeeCode);
+	}
+	
+	@GetMapping("consult/findone/{chronogramCode}")
+	public FindChronogramResponse getChronogram(@PathVariable("chronogramCode") String chronogramCode) {
+		return this.chronogramService.findChronogram(chronogramCode);
 	}
 
 }

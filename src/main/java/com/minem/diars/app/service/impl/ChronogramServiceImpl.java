@@ -9,6 +9,7 @@ import com.minem.diars.app.core.ChronogramCore;
 import com.minem.diars.app.model.api.request.ChronogramRegisterRequest;
 import com.minem.diars.app.model.api.response.CheckChronogramResponse;
 import com.minem.diars.app.model.api.response.ChronogramRegisterResponse;
+import com.minem.diars.app.model.api.response.FindChronogramResponse;
 import com.minem.diars.app.model.common.ChronogramModel;
 import com.minem.diars.app.service.ChronogramService;
 import com.minem.diars.app.util.constants.ChronogramConstants;
@@ -69,6 +70,11 @@ public class ChronogramServiceImpl implements ChronogramService {
 		}else {
 			return chronogramCore.findChronograms(employeeCode);
 		}
+	}
+
+	@Override
+	public FindChronogramResponse findChronogram(String chronogramCode) {
+		return chronogramCore.findChronogram(chronogramCode);
 	}
 	
 }

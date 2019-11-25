@@ -1,5 +1,8 @@
 package com.minem.diars.app.model.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,6 +10,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -36,5 +42,19 @@ public class CredentialEntity {
 				cascade = CascadeType.ALL,
 				mappedBy = "credential")
 	private EmployeeEntity employee;
+	
+	@ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                CascadeType.PERSIST,
+                CascadeType.MERGE
+            })
+    @JoinTable(name = "credential_role",
+            joinColumns = {
+            		@JoinColumn(name = "id_credential")
+            },
+            inverseJoinColumns = {
+            		@JoinColumn(name = "id_role")
+            })
+	private Set<RoleEntity> roles = new HashSet<>();
 
 }
