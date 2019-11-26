@@ -17,6 +17,8 @@ import com.minem.diars.app.util.constants.ErrorConstant;
 import com.minem.diars.app.util.constants.MinemConstants;
 import com.minem.diars.app.util.constants.ProgramConstant;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service(ProgramConstant.SERVICE)
 public class ProgramServiceImpl implements ProgramService {
 	
@@ -28,8 +30,7 @@ public class ProgramServiceImpl implements ProgramService {
 	public ProgramRegisterResponse registerProgram(ProgramRegisterRequest request) {
 
 		if (!request.isNull()) {
-			ProgramModel model = this.programCore.saveProgram(request);
-			return validateRegisterStatus(model);
+			return validateLodgingAndTransport(request);
 		} else {
 			ProgramRegisterResponse response = new ProgramRegisterResponse();
 			response.setStatus(MinemConstants.RESPONSE_KO);
@@ -38,6 +39,31 @@ public class ProgramServiceImpl implements ProgramService {
 			
 			return response;
 		}
+	}
+
+	private ProgramRegisterResponse validateLodgingAndTransport(ProgramRegisterRequest request) {
+		if (validateInvalidNumber(request.getLodgingCost()) == null && validateInvalidNumber(request.getTransportCost()) == null) {
+			ProgramModel model = this.programCore.saveProgram(request);
+			return validateRegisterStatus(model);
+		} else {
+			ProgramRegisterResponse response = new ProgramRegisterResponse();
+			response = new ProgramRegisterResponse();
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("PG-0004");
+			response.setErrorMessage("Debe ingresar un valor correcto en Hospedaje y Transporte.");
+			return response;
+		}
+	}
+	
+	private ProgramRegisterResponse validateInvalidNumber(String input) {
+		try {
+			Integer logding = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			ProgramRegisterResponse response = new ProgramRegisterResponse();
+			System.out.println("Error al validar hospedaje y transporte.");
+			return response;
+		}
+		return null;
 	}
 
 	private ProgramRegisterResponse validateRegisterStatus(ProgramModel model) {

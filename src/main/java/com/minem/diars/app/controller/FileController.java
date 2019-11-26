@@ -3,6 +3,7 @@ package com.minem.diars.app.controller;
 import java.io.File;
 import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,9 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin("http://localhost:4200")
 public class FileController {
 	
-	@PostMapping("upload")
-	public String attachFiles(@RequestBody Map<String, String> files) {
-		System.out.println(files.toString());
+	@PostMapping(value = "upload",
+				consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String attachFiles(@RequestParam("file") MultipartFile file) {
 		return "";
 	}
 

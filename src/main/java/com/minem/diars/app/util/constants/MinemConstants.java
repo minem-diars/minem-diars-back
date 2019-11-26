@@ -35,6 +35,6 @@ public class MinemConstants {
 	/* Roles */
 	public static final String ROLE_D_ADMIN = "ROLE_D_ADMIN";
 	public static final String ROLE_V_ADMIN = "ROLE_V_ADMIN";
-	
+	public static final String ROLE_C_ADMIN = "ROLE_C_ADMIN";
 
 }

@@ -88,7 +88,7 @@ public class ProgramCore {
 		Integer state = getRoleOfUser(role);
 		List<Program> programs = new ArrayList<Program>();
 		
-		if (state ==  null || state == 0) {
+		if (state ==  null) {
 			return null;
 		} else {
 			Iterator<ChronogramEntity> chronograms = employee.getChronograms().iterator();
@@ -110,8 +110,10 @@ public class ProgramCore {
 			return 2;
 		case MinemConstants.ROLE_V_ADMIN:
 			return 3;
-		default:
+		case MinemConstants.ROLE_C_ADMIN:
 			return 0;
+		default:
+			return null;
 		}
 	}
 	private CheckProgramResponse buildResponse(EmployeeEntity employee, List<Program> programs) {
