@@ -17,8 +17,6 @@ import com.minem.diars.app.util.constants.ErrorConstant;
 import com.minem.diars.app.util.constants.MinemConstants;
 import com.minem.diars.app.util.constants.ProgramConstant;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service(ProgramConstant.SERVICE)
 public class ProgramServiceImpl implements ProgramService {
 	
