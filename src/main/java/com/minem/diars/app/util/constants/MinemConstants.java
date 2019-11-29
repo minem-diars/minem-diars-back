@@ -24,6 +24,7 @@ public class MinemConstants {
 	public static final String PROGRAM_REPOSITORY = "programRepository";
 	public static final String MINING_REPOSITORY = "miningRepository";
 	public static final String FILE_REPOSITORY = "fileRepository";
+	public static final String AIRLINE_REPOSITORY = "airlineRepository";
 	
 	/* Core */
 	public static final String CHRONOGRAM_CORE = "chronogramCore";

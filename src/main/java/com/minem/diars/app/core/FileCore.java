@@ -38,15 +38,20 @@ public class FileCore {
 				
 				Path employeDirectory = createEmployeeDirectory(rootLocation, programEnt.getChronogram().getEmployee());
 				
-				Files.copy(file.getInputStream(), employeDirectory.resolve(file.getOriginalFilename().split("\\+")[0]));
-				
-				FileEntity fileEnt = new FileEntity();
-				fileEnt.setFileName(file.getOriginalFilename().split("\\+")[1]);
-				fileEnt.setFilePath(employeDirectory.toString() + file.getOriginalFilename().split("\\+")[0]);
-				
-				programEnt.getFiles().add(fileEnt);
-				
-				this.programRepository.save(programEnt);
+				if (Files.isExecutable(employeDirectory)) {
+					FileEntity fileEnt = new FileEntity();
+					fileEnt.setFileName(file.getOriginalFilename().split("\\+")[1]);
+					fileEnt.setFilePath(employeDirectory.toString() + file.getOriginalFilename().split("\\+")[0]);
+					
+					programEnt.getFiles().add(fileEnt);
+					fileEnt.setProgram(programEnt);
+					
+					ProgramEntity ent = this.programRepository.save(programEnt);
+					
+					if (ent != null) {
+						Files.copy(file.getInputStream(), employeDirectory.resolve(file.getOriginalFilename().split("\\+")[0]));
+					}
+				}
 				
 			} catch (IOException e) {
 				throw new RuntimeException("Error al guardar: " + file.getOriginalFilename());

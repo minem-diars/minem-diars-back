@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.minem.diars.app.model.bean.Airline;
 import com.minem.diars.app.model.bean.Mining;
 import com.minem.diars.app.model.common.CommonModel;
+import com.minem.diars.app.model.entity.AirlineEntity;
 import com.minem.diars.app.model.entity.MiningEntity;
+import com.minem.diars.app.repository.AirlineRepository;
 import com.minem.diars.app.repository.MiningRepository;
 import com.minem.diars.app.util.constants.MinemConstants;
 
@@ -20,10 +23,14 @@ public class CommonCore {
 	@Qualifier(MinemConstants.MINING_REPOSITORY)
 	private MiningRepository miningRepository;
 	
+	@Autowired
+	@Qualifier(MinemConstants.AIRLINE_REPOSITORY)
+	private AirlineRepository airlineRepository;
+	
 	public CommonModel listMinings() {
-		List<MiningEntity> miningsEnt = miningRepository.findAll();
+		List<MiningEntity> miningsEnt = this.miningRepository.findAll();
 		if (miningsEnt != null) {
-			return buildModelResponse(miningsEnt);
+			return buildMiningResponse(miningsEnt);
 		} else {
 			return buildModelError();
 		}
@@ -35,18 +42,45 @@ public class CommonCore {
 		return response;
 	}
 
-	private CommonModel buildModelResponse(List<MiningEntity> miningsEnt) {
+	private CommonModel buildMiningResponse(List<MiningEntity> miningsEnt) {
 		CommonModel response = new CommonModel();
 		response.setStatus(MinemConstants.RESPONSE_OK);
-		response.setMinings(convertList(miningsEnt));
+		response.setMinings(converMiningtList(miningsEnt));
 		return response;
 	}
 
-	private List<Mining> convertList(List<MiningEntity> miningsEnt) {
+	private List<Mining> converMiningtList(List<MiningEntity> miningsEnt) {
 		List<Mining> response = new ArrayList<Mining>();
 		for(MiningEntity ent : miningsEnt) {
 			Mining mining = new Mining();
 			mining.setCode(ent.getIdMining());
+			mining.setName(ent.getName());
+			response.add(mining);
+		}
+		return response;
+	}
+
+	public CommonModel listAirlines() {
+		List<AirlineEntity> airlinesEnt = this.airlineRepository.findAll();
+		if (airlinesEnt != null) {
+			return buildAirlineResponse(airlinesEnt);
+		} else {
+			return buildModelError();
+		}
+	}
+
+	private CommonModel buildAirlineResponse(List<AirlineEntity> airlinesEnt) {
+		CommonModel response = new CommonModel();
+		response.setStatus(MinemConstants.RESPONSE_OK);
+		response.setAirlines(convertAirlineList(airlinesEnt));
+		return response;
+	}
+
+	private List<Airline> convertAirlineList(List<AirlineEntity> airlinesEnt) {
+		List<Airline> response = new ArrayList<Airline>();
+		for(AirlineEntity ent : airlinesEnt) {
+			Airline mining = new Airline();
+			mining.setCode(ent.getIdAirline());
 			mining.setName(ent.getName());
 			response.add(mining);
 		}
