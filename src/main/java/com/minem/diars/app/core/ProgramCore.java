@@ -1,9 +1,12 @@
 package com.minem.diars.app.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,8 +17,12 @@ import com.minem.diars.app.model.api.request.UpdateStateRequest;
 import com.minem.diars.app.model.api.response.CheckProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
+import com.minem.diars.app.model.api.response.VerifyProgramResponse;
+import com.minem.diars.app.model.bean.Activity;
+import com.minem.diars.app.model.bean.ActivityResponse;
 import com.minem.diars.app.model.bean.Program;
 import com.minem.diars.app.model.common.ProgramModel;
+import com.minem.diars.app.model.entity.ChronogramDetailEntity;
 import com.minem.diars.app.model.entity.ChronogramEntity;
 import com.minem.diars.app.model.entity.EmployeeEntity;
 import com.minem.diars.app.model.entity.ProgramEntity;
@@ -202,6 +209,39 @@ public class ProgramCore {
 		response.setStatus(MinemConstants.RESPONSE_OK);
 		response.setMessage("Estado de programación actualizado.");
 		return response;
+	}
+
+	public VerifyProgramResponse getForVerifyProgram(Integer idProgram) {
+		VerifyProgramResponse response = new VerifyProgramResponse();
+		ProgramEntity programEnt = this.programRepository.findById(idProgram).get();
+		response.setState(programEnt.getState());
+		buildResponse(response, programEnt.getChronogram());
+		return response;
+	}
+
+	private void buildResponse(VerifyProgramResponse response, ChronogramEntity chronogramEnt) {
+		buildEmployeeAndMining(response, chronogramEnt);
+		buildActivities(response, chronogramEnt.getChronogramDetails());
+	}
+
+	//TERMINAR
+	private void buildActivities(VerifyProgramResponse response, Set<ChronogramDetailEntity> chronogramDetails) {
+		List<ActivityResponse> activityList = new ArrayList<ActivityResponse>();
+		Iterator<ChronogramDetailEntity> itr = chronogramDetails.iterator();
+		while (itr.hasNext()){
+			ChronogramDetailEntity detailEnt = itr.next();
+			ActivityResponse activityRs = new ActivityResponse();
+			activityRs.setDay(detailEnt.getDay());
+			activityRs.setActivity(detailEnt.getActivity());
+			activityList.add(activityRs);
+		}
+		
+		response.setActivities(activityList);
+	}
+
+	private void buildEmployeeAndMining(VerifyProgramResponse response, ChronogramEntity chronogramEnt) {
+		response.setEmployeeName(chronogramEnt.getEmployee().getFullname());
+		response.setMiningName(chronogramEnt.getMining().getName());
 	}
 
 }

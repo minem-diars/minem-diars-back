@@ -6,6 +6,7 @@ import com.minem.diars.app.model.api.response.CheckProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.ProgramRegisterResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
+import com.minem.diars.app.model.api.response.VerifyProgramResponse;
 
 public interface ProgramService {
 	
@@ -16,5 +17,7 @@ public interface ProgramService {
 	FindForEvaluateResponse findProgram(Integer programCode);
 
 	UpdateStateResponse updateProgramState(UpdateStateRequest request);
+
+	VerifyProgramResponse verifyProgram(Integer idProgram);
 
 }

@@ -11,6 +11,7 @@ import com.minem.diars.app.model.api.response.CheckProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.ProgramRegisterResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
+import com.minem.diars.app.model.api.response.VerifyProgramResponse;
 import com.minem.diars.app.model.common.ProgramModel;
 import com.minem.diars.app.service.ProgramService;
 import com.minem.diars.app.util.constants.ErrorConstant;
@@ -123,6 +124,22 @@ public class ProgramServiceImpl implements ProgramService {
 	public UpdateStateResponse updateProgramState(UpdateStateRequest request) {
 		UpdateStateResponse response = this.programCore.updateProgram(request);
 		return response;
+	}
+
+	@Override
+	public VerifyProgramResponse verifyProgram(Integer idProgram) {
+		VerifyProgramResponse response = this.programCore.getForVerifyProgram(idProgram);
+		if (response != null) {
+			response.setStatus(MinemConstants.RESPONSE_OK);
+			response.setMessage("La programación de viaje se derivo correctamente.");
+			return response;
+		} else {
+			response = new VerifyProgramResponse();
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("CG-0004");
+			response.setErrorMessage("Error al obtener programación de viaje.");
+			return response;
+		}
 	}
 
 }

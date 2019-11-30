@@ -125,7 +125,7 @@ public class ChronogramCore {
 			
 			for (int i = 0; i < activities.length; i++) {
 				ent = new ChronogramDetailEntity();
-				ent.setDay(String.valueOf(obj.getDay()));
+				ent.setDay(obj.getDay());
 				ent.setActivity(activities[i]);
 				
 				ent.setChronogram(chronogram);

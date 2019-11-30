@@ -16,6 +16,7 @@ import com.minem.diars.app.model.api.response.CheckProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.ProgramRegisterResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
+import com.minem.diars.app.model.api.response.VerifyProgramResponse;
 import com.minem.diars.app.service.ProgramService;
 import com.minem.diars.app.util.constants.ProgramConstant;
 
@@ -47,6 +48,11 @@ public class ProgramController {
 	@PostMapping("update/state")
 	public UpdateStateResponse updateState(@RequestBody UpdateStateRequest request) {
 		return this.programService.updateProgramState(request);
+	}
+	
+	@GetMapping("verify/{idProgram}")
+	public VerifyProgramResponse verifyProgram(@PathVariable("idProgram") Integer idProgram) {
+		return this.programService.verifyProgram(idProgram);
 	}
 
 }

@@ -51,5 +51,10 @@ public class ProgramEntity {
 			cascade = CascadeType.ALL,
 			mappedBy = "program")
 	private Set<FileEntity> files = new HashSet<FileEntity>();
+	
+	@OneToOne(fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL,
+			mappedBy = "program")
+	private TicketPurchaseEntity ticketPurchase;
 
 }

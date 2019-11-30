@@ -15,6 +15,7 @@ public class MinemConstants {
 	public static final String FILE_SERVICE = "fileService";
 	
 	public static final String COMMON_SERVICE = "commonService";
+	public static final String TICKET_PURCHASE_SERVICE = "ticketPurchaseService";
 	
 	/* Repository */
 	public static final String EMPLOYEE_REPOSITORY = "employeeRepository";
@@ -25,12 +26,15 @@ public class MinemConstants {
 	public static final String MINING_REPOSITORY = "miningRepository";
 	public static final String FILE_REPOSITORY = "fileRepository";
 	public static final String AIRLINE_REPOSITORY = "airlineRepository";
+	public static final String ROLE_REPOSITORY = "roleRepository";
+	public static final String TICKET_PURCHASE_REPOSITORY = "ticketPurchaseRepository";
 	
 	/* Core */
 	public static final String CHRONOGRAM_CORE = "chronogramCore";
 	
 	public static final String COMMON_CORE = "commonCore";
 	public static final String FILE_CORE = "fileCore";
+	public static final String TICKET_PURCHASE_CORE = "ticketPurchaseCore";
 	
 	/* Signos */
 	public static final String COMMA = ",";
