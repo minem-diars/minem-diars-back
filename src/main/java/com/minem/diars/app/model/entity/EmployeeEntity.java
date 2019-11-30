@@ -50,7 +50,7 @@ public class EmployeeEntity {
 	private String address;
 	
 	@Column(name = "phone")
-	private Integer phone;
+	private String phone;
 	
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_credential", nullable = false)
