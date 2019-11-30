@@ -28,7 +28,20 @@ public class LoginCore {
 		
 		CredentialEntity entity = credentialRepository.findByUsername(request.getUsername());
 		
-		return buildResponse(entity);
+		if(entity!=null) {
+			
+			return validatePassword(entity, request);
+		}
+		return null;
+		
+	}
+
+	private LoginModel validatePassword(CredentialEntity entity, LoginRequest request) {
+		if(request.getPassword().equals(entity.getPassword())) {
+			return buildResponse(entity);
+			
+		}
+		return null;
 	}
 
 	private LoginModel buildResponse(CredentialEntity entity) {

@@ -13,7 +13,7 @@ public class MinemConstants {
 	/* Service */
 	public static final String CHRONOGRAM_SERVICE = "chronogramService";
 	public static final String FILE_SERVICE = "fileService";
-	
+	public static final String EMPLOYEE_SERVICE = "employeeService";
 	public static final String COMMON_SERVICE = "commonService";
 	
 	/* Repository */
@@ -25,10 +25,11 @@ public class MinemConstants {
 	public static final String MINING_REPOSITORY = "miningRepository";
 	public static final String FILE_REPOSITORY = "fileRepository";
 	public static final String AIRLINE_REPOSITORY = "airlineRepository";
+	public static final String ROLE_REPOSITORY = "roleRepository";
 	
 	/* Core */
 	public static final String CHRONOGRAM_CORE = "chronogramCore";
-	
+	public static final String EMPLOYEE_CORE = "employeeCore";
 	public static final String COMMON_CORE = "commonCore";
 	public static final String FILE_CORE = "fileCore";
 	
