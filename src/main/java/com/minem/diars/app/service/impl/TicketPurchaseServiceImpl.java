@@ -19,8 +19,7 @@ public class TicketPurchaseServiceImpl implements TicketPurchaseService {
 
 	@Override
 	public RegisterTicketPurchaseResponse registerTicketPurchase(RegisterTicketPurchaseRequest request) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.ticketPurchaseCore.registerTickerPurchase(request);
 	}
 
 }
