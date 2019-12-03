@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.minem.diars.app.model.api.response.FindAirlineResponse;
 import com.minem.diars.app.model.api.response.FindMiningResponse;
+import com.minem.diars.app.model.api.response.FindRolesResponse;
 import com.minem.diars.app.service.CommonService;
 import com.minem.diars.app.util.constants.MinemConstants;
 
@@ -29,6 +30,11 @@ public class CommonController {
 	@GetMapping("consult/airlines")
 	public FindAirlineResponse getAirlines() {
 		return this.commonService.findAirlines();
+	}
+	
+	@GetMapping("consult/roles")
+	public FindRolesResponse getRoles() {
+		return this.commonService.findRoles();
 	}
 
 }

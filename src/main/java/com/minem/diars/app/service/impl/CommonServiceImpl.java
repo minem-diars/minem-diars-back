@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.minem.diars.app.core.CommonCore;
 import com.minem.diars.app.model.api.response.FindAirlineResponse;
 import com.minem.diars.app.model.api.response.FindMiningResponse;
+import com.minem.diars.app.model.api.response.FindRolesResponse;
 import com.minem.diars.app.model.common.CommonModel;
 import com.minem.diars.app.service.CommonService;
 import com.minem.diars.app.util.constants.MinemConstants;
@@ -50,6 +51,24 @@ public class CommonServiceImpl implements CommonService {
 			response.setStatus(model.getStatus());
 			response.setErrorCode("");
 			response.setErrorMessage("Error al obtener lista de aerolineas.");
+			return response;
+		}
+	}
+
+	@Override
+	public FindRolesResponse findRoles() {
+		CommonModel model = commonCore.listRoles();
+		FindRolesResponse response = null;
+		if (MinemConstants.RESPONSE_OK.equals(model.getStatus())) {
+			response = new FindRolesResponse();
+			response.setStatus(model.getStatus());
+			response.setRoles(model.getRoles());
+			return response;
+		} else {
+			response = new FindRolesResponse();
+			response.setStatus(model.getStatus());
+			response.setErrorCode("");
+			response.setErrorMessage("Error al obtener lista de roles.");
 			return response;
 		}
 	}

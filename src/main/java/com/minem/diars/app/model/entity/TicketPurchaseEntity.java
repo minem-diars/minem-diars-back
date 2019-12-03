@@ -33,6 +33,9 @@ public class TicketPurchaseEntity {
 	@Column(name = "comeback_date")
 	private String comebackDate;
 	
+	@Column(name = "state")
+	private Integer state;
+	
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_program", nullable = false)
 	private ProgramEntity program;

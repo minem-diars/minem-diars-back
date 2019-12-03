@@ -9,11 +9,14 @@ import org.springframework.stereotype.Component;
 
 import com.minem.diars.app.model.bean.Airline;
 import com.minem.diars.app.model.bean.Mining;
+import com.minem.diars.app.model.bean.Role;
 import com.minem.diars.app.model.common.CommonModel;
 import com.minem.diars.app.model.entity.AirlineEntity;
 import com.minem.diars.app.model.entity.MiningEntity;
+import com.minem.diars.app.model.entity.RoleEntity;
 import com.minem.diars.app.repository.AirlineRepository;
 import com.minem.diars.app.repository.MiningRepository;
+import com.minem.diars.app.repository.RoleRepository;
 import com.minem.diars.app.util.constants.MinemConstants;
 
 @Component(MinemConstants.COMMON_CORE)
@@ -26,6 +29,10 @@ public class CommonCore {
 	@Autowired
 	@Qualifier(MinemConstants.AIRLINE_REPOSITORY)
 	private AirlineRepository airlineRepository;
+	
+	@Autowired
+	@Qualifier(MinemConstants.ROLE_REPOSITORY)
+	private RoleRepository roleRepository;
 	
 	public CommonModel listMinings() {
 		List<MiningEntity> miningsEnt = this.miningRepository.findAll();
@@ -83,6 +90,33 @@ public class CommonCore {
 			mining.setCode(ent.getIdAirline());
 			mining.setName(ent.getName());
 			response.add(mining);
+		}
+		return response;
+	}
+
+	public CommonModel listRoles() {
+		List<RoleEntity> rolesEnt = this.roleRepository.findAll();
+		if (rolesEnt != null) {
+			return buildRoleResponse(rolesEnt);
+		} else {
+			return buildModelError();
+		}
+	}
+
+	private CommonModel buildRoleResponse(List<RoleEntity> rolesEnt) {
+		CommonModel response = new CommonModel();
+		response.setStatus(MinemConstants.RESPONSE_OK);
+		response.setRoles(convertRoleList(rolesEnt));
+		return response;
+	}
+
+	private List<Role> convertRoleList(List<RoleEntity> rolesEnt) {
+		List<Role> response = new ArrayList<Role>();
+		for (RoleEntity ent : rolesEnt) {
+			Role role = new Role();
+			role.setCode(ent.getIdRole());
+			role.setName(ent.getName());
+			response.add(role);
 		}
 		return response;
 	}
