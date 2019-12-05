@@ -66,7 +66,7 @@ public class TicketPurchaseCore {
 		TicketPurchaseEntity ticketEnt = new TicketPurchaseEntity();
 		ticketEnt.setGoingDate(request.getGoingDate());
 		ticketEnt.setComebackDate(request.getComebackDate());
-		ticketEnt.setState(1);
+		ticketEnt.setState(2);
 		return ticketEnt;
 	}
 
@@ -77,6 +77,7 @@ public class TicketPurchaseCore {
 			response = new ConsultTicketPurchaseResponse();
 			response.setEmployeeName(employeeEnt.getFullname());
 			response.setTickets(buildTicketList(employeeEnt.getChronograms().iterator()));
+			return response;
 		}
 		return null; // No existe empleado
 	}
@@ -87,7 +88,7 @@ public class TicketPurchaseCore {
 			response = new ArrayList<TicketPurchase>();
 			while (iterator.hasNext()) {
 				ChronogramEntity chronogramEnt = iterator.next();
-				if (chronogramEnt.getProgram() != null && chronogramEnt.getProgram().getState() == 4) {
+				if (chronogramEnt.getProgram() != null && (chronogramEnt.getProgram().getState() == 4 || chronogramEnt.getProgram().getState() == 0)) {
 					ProgramEntity programEnt = chronogramEnt.getProgram();
 					if (programEnt.getTicketPurchase() != null) {
 						TicketPurchase ticket = new TicketPurchase();

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.minem.diars.app.model.entity.FileEntity;
+import com.minem.diars.app.model.api.response.ConsultAttachedFileResponse;
 import com.minem.diars.app.repository.FileRepository;
 import com.minem.diars.app.service.FileService;
 import com.minem.diars.app.util.constants.MinemConstants;
@@ -41,13 +43,19 @@ public class FileController {
 		this.fileService.uploadFile(file);
 	}
 	
-//	@GetMapping("/download/{id}")
-//	public ResponseEntity<byte[]> downloadFile(@PathVariable("id") Integer id) throws IOException {
-//		FileEntity dFile = this.fileRepository.findById(id).get();
-//		return ResponseEntity.ok()
-//					.contentType(MediaType.IMAGE_JPEG)
-//					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename = " + dFile.getFileName())
-//					.body(dFile.getData());
-//	}
-
+	@GetMapping("consult/{programCode}")
+	public ConsultAttachedFileResponse getAttachedFiles(@PathVariable("programCode") Integer programCode){
+		return this.fileService.consultAttachedFiles(programCode);
+	}
+	
+	@GetMapping("download/{programCode}/{fileName}")
+	@ResponseBody
+	public ResponseEntity<Resource> getAttachedFile(@PathVariable("programCode") Integer programCode,
+													@PathVariable("fileName") String fileName){
+		Resource downloadFile = this.fileService.getAttachedFile(programCode, fileName); 
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + downloadFile.getFilename() + "\"")
+				.body(downloadFile);
+	}
+	
 }

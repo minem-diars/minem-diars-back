@@ -7,17 +7,19 @@ import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.minem.diars.app.core.FileCore;
+import com.minem.diars.app.model.api.response.ConsultAttachedFileResponse;
 import com.minem.diars.app.service.FileService;
 import com.minem.diars.app.util.constants.MinemConstants;
 
 @Service(MinemConstants.FILE_SERVICE)
 public class FileServiceImpl implements FileService {
 	
-	private final Path rootLocation = Paths.get("C:\\Users\\asus\\Desktop\\livelihoodFiles");
+	private final Path rootLocation = Paths.get("C:\\Users\\juana\\Desktop\\livelihoodFiles");
 	//livelihoodFiles
 	@Autowired
 	@Qualifier(MinemConstants.FILE_CORE)
@@ -40,6 +42,16 @@ public class FileServiceImpl implements FileService {
 		} catch (IOException e) {
 			throw new RuntimeException("Could not initialize storage!");
 		}
+	}
+
+	@Override
+	public ConsultAttachedFileResponse consultAttachedFiles(Integer programCode) {
+		return this.fileCore.consultAttachedFiles(programCode);
+	}
+
+	@Override
+	public Resource getAttachedFile(Integer programCode, String fileName) {
+		return this.fileCore.downloadAttachedFile(programCode, fileName);
 	}
 
 }
