@@ -34,10 +34,11 @@ public class ProgramController {
 		return this.programService.registerProgram(request);
 	}
 	
-	@GetMapping("consult/{employeeCode}/{role}")
+	@GetMapping("consult/{employeeCode}/{role}/{flag}")
 	public CheckProgramResponse getCheckProgram(@PathVariable("employeeCode") Integer employeeCode,
-												@PathVariable("role") String role) {
-		return this.programService.checkProgram(employeeCode, role);
+												@PathVariable("role") String role,
+												@PathVariable("flag") Integer flag) {
+		return this.programService.checkProgram(employeeCode, role, flag);
 	}
 	
 	@GetMapping("consult/evaluate/{programCode}")

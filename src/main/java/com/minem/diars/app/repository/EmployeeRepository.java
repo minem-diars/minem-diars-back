@@ -8,5 +8,7 @@ import com.minem.diars.app.util.constants.MinemConstants;
 
 @Repository(MinemConstants.EMPLOYEE_REPOSITORY)
 public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Integer>{
+	
+	EmployeeEntity findByEmail(String email);
 
 }

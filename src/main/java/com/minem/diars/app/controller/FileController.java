@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.minem.diars.app.model.api.response.ConsultAttachedFileResponse;
+import com.minem.diars.app.model.api.response.FileUploadResponse;
 import com.minem.diars.app.repository.FileRepository;
 import com.minem.diars.app.service.FileService;
 import com.minem.diars.app.util.constants.MinemConstants;
@@ -38,9 +39,8 @@ public class FileController {
 	
 	@PostMapping(value = "upload",
 				consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public void attachFiles(@RequestParam("file") MultipartFile file) throws IOException {
-		System.out.println(file.getOriginalFilename());
-		this.fileService.uploadFile(file);
+	public FileUploadResponse attachFiles(@RequestParam("file") MultipartFile file) throws IOException {
+		return this.fileService.uploadFile(file);
 	}
 	
 	@GetMapping("consult/{programCode}")

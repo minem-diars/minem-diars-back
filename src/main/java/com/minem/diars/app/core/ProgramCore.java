@@ -1,8 +1,6 @@
 package com.minem.diars.app.core;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,7 +16,6 @@ import com.minem.diars.app.model.api.response.CheckProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
 import com.minem.diars.app.model.api.response.VerifyProgramResponse;
-import com.minem.diars.app.model.bean.Activity;
 import com.minem.diars.app.model.bean.ActivityResponse;
 import com.minem.diars.app.model.bean.Program;
 import com.minem.diars.app.model.common.ProgramModel;
@@ -86,10 +83,15 @@ public class ProgramCore {
 		program.setLodgingCost(request.getLodgingCost());
 		program.setTransportCost(request.getTransportCost());
 		program.setState(ProgramConstant.WAITING_STATE);
+		program.setDerv_dg(0);
+		program.setDerv_ol(0);
+		program.setState_dl(0);
+		program.setSt_register_file(0);
+		program.setSt_ticket_purchase(0);
 		return program;
 	}
 	
-	public CheckProgramResponse findPrograms(Integer employeeCode, String role) {
+	public CheckProgramResponse findPrograms(Integer employeeCode, String role, Integer flag) {
 		
 		EmployeeEntity employee = this.employeeRepository.findById(employeeCode).get();
 		Integer state = getRoleOfUser(role);
@@ -100,8 +102,7 @@ public class ProgramCore {
 		} else {
 			Iterator<ChronogramEntity> chronograms = employee.getChronograms().iterator();
 			while (chronograms.hasNext()) {
-				Program program = new Program();
-				program = buildProgram(chronograms.next(), state);
+				Program program = buildProgram(chronograms.next(), state, flag);
 				if (program != null) {
 					programs.add(program);
 				}
@@ -112,17 +113,29 @@ public class ProgramCore {
 	}
 	
 	private Integer getRoleOfUser(String role) {
+		Integer valueOfUser = null;
 		switch (role) {
-		case MinemConstants.ROLE_D_ADMIN:
-			return 2;
-		case MinemConstants.ROLE_V_ADMIN:
-			return 3;
-		case MinemConstants.ROLE_C_ADMIN:
-			return 0;
+		case MinemConstants.ROLE_OLOG:
+			valueOfUser = 1;
+			break;
+		case MinemConstants.ROLE_DGFM:
+			valueOfUser = 2;
+			break;
+		case MinemConstants.ROLE_VICE:
+			valueOfUser = 3;
+			break;
+		case MinemConstants.ROLE_DLOG:
+			valueOfUser = 4;
+			break;
+		case MinemConstants.ROLE_COAD:
+			valueOfUser = 5;
+			break;
 		default:
-			return null;
+			return valueOfUser;
 		}
+		return valueOfUser;
 	}
+	
 	private CheckProgramResponse buildResponse(EmployeeEntity employee, List<Program> programs) {
 		CheckProgramResponse response = new CheckProgramResponse();
 		response.setEmployeeName(employee.getFullname());
@@ -130,26 +143,78 @@ public class ProgramCore {
 		return response;
 	}
 
-	private Program buildProgram(ChronogramEntity ent, Integer state) {
+	private Program buildProgram(ChronogramEntity ent, Integer state, Integer flag) {
 		ProgramEntity programEnt = ent.getProgram();
 		if (programEnt != null) {
-			return validateState(programEnt, ent, state);
+			return validateState(programEnt, ent, state, flag);
 		}else {
 			return null;
 		}
 	}
 	
-	private Program validateState(ProgramEntity programEnt, ChronogramEntity ent, Integer state) {
-		if (programEnt.getState() == state) {
-			Program response = new Program();
-			response.setProgramCode(programEnt.getIdProgram());
-			response.setMiningEntity(ent.getMining().getName());
-			response.setViaticFlag(programEnt.getViaticFlag());
-			response.setState(programEnt.getState());
-			return response;
-		} else {
+	private Program validateState(ProgramEntity programEnt, ChronogramEntity ent, Integer state, Integer flag) {
+		Program response = null;
+		switch (state) {
+		case 1:
+			if (programEnt.getState() == 1 && programEnt.getDerv_ol() == 0 && programEnt.getSt_register_file() == 1 && programEnt.getSt_ticket_purchase() == 1) {
+				response = new Program();
+				response.setProgramCode(programEnt.getIdProgram());
+				response.setMiningEntity(ent.getMining().getName());
+				response.setViaticFlag(programEnt.getViaticFlag());
+				response.setState(programEnt.getState());
+			}
+			break;
+		case 2:
+			if (programEnt.getState() == state) {
+				response = new Program();
+				response.setProgramCode(programEnt.getIdProgram());
+				response.setMiningEntity(ent.getMining().getName());
+				response.setViaticFlag(programEnt.getViaticFlag());
+				response.setState(programEnt.getState());
+			}
+			break;
+		case 3:
+			if (programEnt.getDerv_dg() == 1 && programEnt.getState() == 2) {
+				response = new Program();
+				response.setProgramCode(programEnt.getIdProgram());
+				response.setMiningEntity(ent.getMining().getName());
+				response.setViaticFlag(programEnt.getViaticFlag());
+				response.setState(programEnt.getState());
+			}
+			break;
+		case 4:
+			if (programEnt.getState_dl() == 0 && programEnt.getDerv_ol() == 1 && programEnt.getSt_register_file() == 1 && programEnt.getSt_ticket_purchase() == 1) {
+				response = new Program();
+				response.setProgramCode(programEnt.getIdProgram());
+				response.setMiningEntity(ent.getMining().getName());
+				response.setViaticFlag(programEnt.getViaticFlag());
+				response.setState(programEnt.getState());
+			}
+			break;
+		case 5:
+			if (flag == 1) { // reg doc sustento
+				if (programEnt.getState() == 1 && programEnt.getSt_register_file() == 0 && programEnt.getSt_ticket_purchase() == 0) {
+					response = new Program();
+					response.setProgramCode(programEnt.getIdProgram());
+					response.setMiningEntity(ent.getMining().getName());
+					response.setViaticFlag(programEnt.getViaticFlag());
+					response.setState(programEnt.getState());
+				}
+			} else if (flag == 2) { // reg ped compra pasaje
+				if (programEnt.getState() == 1 && programEnt.getSt_register_file() == 1 && programEnt.getSt_ticket_purchase() == 0) {
+					response = new Program();
+					response.setProgramCode(programEnt.getIdProgram());
+					response.setMiningEntity(ent.getMining().getName());
+					response.setViaticFlag(programEnt.getViaticFlag());
+					response.setState(programEnt.getState());
+				}
+			}
+			break;
+
+		default:
 			return null;
 		}
+		return response;
 	}
 
 	public FindForEvaluateResponse obtainProgram(Integer programCode) {
@@ -199,8 +264,36 @@ public class ProgramCore {
 	}
 
 	private UpdateStateResponse buildUpdateState(ProgramEntity programEnt, UpdateStateRequest request) {
-		programEnt.setState(request.getState());
-		this.programRepository.save(programEnt);
+		
+		switch (request.getRole()) {
+		case MinemConstants.ROLE_DGFM:
+			if (request.getDerv_dg() == 3) {
+				programEnt.setDerv_dg(request.getDerv_dg());
+				this.programRepository.save(programEnt);
+			} else {
+				programEnt.setState(request.getState());
+				this.programRepository.save(programEnt);
+			}
+			break;
+		case MinemConstants.ROLE_VICE:
+			programEnt.setState(request.getState());
+			this.programRepository.save(programEnt);
+			break;
+		case MinemConstants.ROLE_DLOG:
+			programEnt.setState_dl(request.getState_dl());
+			this.programRepository.save(programEnt);
+			break;
+		case MinemConstants.ROLE_OLOG:
+			if (request.getDerv_ol() == 1) {
+				programEnt.setDerv_ol(request.getDerv_ol());
+				this.programRepository.save(programEnt);
+			}
+			break;
+
+		default:
+			break;
+		}
+				
 		return buildUpdateResponse();
 	}
 

@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.minem.diars.app.model.api.request.RegisterTicketPurchaseRequest;
+import com.minem.diars.app.model.api.request.UpdateTicketPurchaseRequest;
 import com.minem.diars.app.model.api.response.ConsultTicketPurchaseResponse;
 import com.minem.diars.app.model.api.response.EvaluateTicketPurchaseResponse;
 import com.minem.diars.app.model.api.response.RegisterTicketPurchaseResponse;
+import com.minem.diars.app.model.api.response.UpdateTicketPurchaseResponse;
 import com.minem.diars.app.model.bean.TicketPurchase;
 import com.minem.diars.app.model.entity.AirlineEntity;
 import com.minem.diars.app.model.entity.ChronogramEntity;
@@ -44,22 +46,36 @@ public class TicketPurchaseCore {
 	private EmployeeRepository employeeRepository;
 	
 	public RegisterTicketPurchaseResponse registerTickerPurchase(RegisterTicketPurchaseRequest request) {
+		RegisterTicketPurchaseResponse response = new RegisterTicketPurchaseResponse();
+		try {
+			ProgramEntity programEnt = this.programRepository.findById(request.getIdProgram()).get();
+			
+			TicketPurchaseEntity ticketEnt = buildTicketPurchaseEntity(request);
+			
+			AirlineEntity airlineEnt = this.airlineRepository.findById(request.getAirline()).get(); 
+			
+			ticketEnt.setAirline(airlineEnt);
+			airlineEnt.getTickets().add(ticketEnt);
+			
+			ticketEnt.setProgram(programEnt);
+			programEnt.setSt_ticket_purchase(1);
+			programEnt.setTicketPurchase(ticketEnt);
+			
+			this.ticketPurchaseRepository.save(ticketEnt);
+			
+			response.setStatus(MinemConstants.RESPONSE_OK);
+			response.setMessage("Se registro pedido de compra de pasaje correctamente.");
+			
+			return response;
+		} catch (Exception e) {
+			
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("TP-0001");
+			response.setErrorMessage("Ocurrio un error al registrar el pedido de compra de pasaje.");
+
+			return response;
+		}
 		
-		ProgramEntity programEnt = this.programRepository.findById(request.getIdProgram()).get();
-		
-		TicketPurchaseEntity ticketEnt = buildTicketPurchaseEntity(request);
-		
-		AirlineEntity airlineEnt = this.airlineRepository.findById(request.getAirline()).get(); 
-		
-		ticketEnt.setAirline(airlineEnt);
-		airlineEnt.getTickets().add(ticketEnt);
-		
-		ticketEnt.setProgram(programEnt);
-		programEnt.setTicketPurchase(ticketEnt);
-		
-		this.ticketPurchaseRepository.save(ticketEnt);
-		
-		return null;
 	}
 
 	private TicketPurchaseEntity buildTicketPurchaseEntity(RegisterTicketPurchaseRequest request) {
@@ -88,9 +104,9 @@ public class TicketPurchaseCore {
 			response = new ArrayList<TicketPurchase>();
 			while (iterator.hasNext()) {
 				ChronogramEntity chronogramEnt = iterator.next();
-				if (chronogramEnt.getProgram() != null && (chronogramEnt.getProgram().getState() == 4 || chronogramEnt.getProgram().getState() == 0)) {
+				if (chronogramEnt.getProgram() != null) {
 					ProgramEntity programEnt = chronogramEnt.getProgram();
-					if (programEnt.getTicketPurchase() != null) {
+					if (programEnt.getTicketPurchase() != null && programEnt.getTicketPurchase().getState() == 2) {
 						TicketPurchase ticket = new TicketPurchase();
 						ticket.setTicketCode(programEnt.getTicketPurchase().getIdTicketPurchase());
 						ticket.setAirlineName(programEnt.getTicketPurchase().getAirline().getName());
@@ -110,11 +126,31 @@ public class TicketPurchaseCore {
 			response = new EvaluateTicketPurchaseResponse();
 			response.setAirlineName(ticketEnt.getAirline().getName());
 			response.setEmployeeName(ticketEnt.getProgram().getChronogram().getEmployee().getFullname());
-			response.setDays(String.valueOf(ticketEnt.getProgram().getChronogram().getDays()));
 			response.setMiningName(ticketEnt.getProgram().getChronogram().getMining().getName());
 			return response;
 		}
 		return null;
+	}
+
+	public UpdateTicketPurchaseResponse updateStateOfTicket(UpdateTicketPurchaseRequest request) {
+		UpdateTicketPurchaseResponse response = new UpdateTicketPurchaseResponse();
+		try {
+			TicketPurchaseEntity ticketEnt = this.ticketPurchaseRepository.findById(request.getTicketCode()).get();
+			ticketEnt.setState(request.getNewState());
+			this.ticketPurchaseRepository.save(ticketEnt);
+			
+			response.setStatus(MinemConstants.RESPONSE_OK);
+			response.setMessage("Se actualizó el estado correctamente.");
+			
+			return response;
+		} catch (Exception e) {
+			
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("TP-0002");
+			response.setErrorMessage("Ocurrio un error al intentar actualizar el estado, intentelo nuevamente.");
+			
+			return response;
+		}
 	}
 
 }

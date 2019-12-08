@@ -12,7 +12,7 @@ public interface ProgramService {
 	
 	ProgramRegisterResponse registerProgram(ProgramRegisterRequest request);
 
-	CheckProgramResponse checkProgram(Integer employeeCode, String role);
+	CheckProgramResponse checkProgram(Integer employeeCode, String role, Integer flag);
 
 	FindForEvaluateResponse findProgram(Integer programCode);
 

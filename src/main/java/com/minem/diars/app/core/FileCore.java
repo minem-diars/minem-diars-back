@@ -51,6 +51,8 @@ public class FileCore {
 					fileEnt.setFileName(file.getOriginalFilename().split("\\+")[1]);
 					fileEnt.setFilePath(employeDirectory.toString() + "\\" + file.getOriginalFilename().split("\\+")[0]);
 					
+					programEnt.setSt_register_file(1);
+					
 					programEnt.getFiles().add(fileEnt);
 					fileEnt.setProgram(programEnt);
 					

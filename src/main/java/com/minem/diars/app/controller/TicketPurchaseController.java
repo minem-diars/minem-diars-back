@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.minem.diars.app.model.api.request.RegisterTicketPurchaseRequest;
+import com.minem.diars.app.model.api.request.UpdateTicketPurchaseRequest;
 import com.minem.diars.app.model.api.response.ConsultTicketPurchaseResponse;
 import com.minem.diars.app.model.api.response.EvaluateTicketPurchaseResponse;
 import com.minem.diars.app.model.api.response.RegisterTicketPurchaseResponse;
+import com.minem.diars.app.model.api.response.UpdateTicketPurchaseResponse;
 import com.minem.diars.app.service.TicketPurchaseService;
 import com.minem.diars.app.util.constants.MinemConstants;
 
@@ -39,6 +41,11 @@ public class TicketPurchaseController {
 	@GetMapping("evaluate/{ticketCode}")
 	public EvaluateTicketPurchaseResponse evaluateTicketPurchase(@PathVariable("ticketCode") Integer ticketCode) {
 		return this.ticketPurchaseService.evaluateTicketPurchase(ticketCode);
+	}
+	
+	@PostMapping("update/state")
+	public UpdateTicketPurchaseResponse updateStateOfTicket(@RequestBody UpdateTicketPurchaseRequest request) {
+		return this.ticketPurchaseService.updateStateOfTicket(request);
 	}
 
 }

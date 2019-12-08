@@ -10,6 +10,10 @@ import lombok.ToString;
 public class UpdateStateRequest {
 	
 	private Integer programCode;
+	private String role;
 	private Integer state;
+	private Integer derv_dg;
+	private Integer derv_ol;
+	private Integer state_dl;
 
 }

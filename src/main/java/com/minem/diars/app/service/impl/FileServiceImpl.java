@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.minem.diars.app.core.FileCore;
 import com.minem.diars.app.model.api.response.ConsultAttachedFileResponse;
+import com.minem.diars.app.model.api.response.FileUploadResponse;
 import com.minem.diars.app.service.FileService;
 import com.minem.diars.app.util.constants.MinemConstants;
 
@@ -26,12 +27,26 @@ public class FileServiceImpl implements FileService {
 	private FileCore fileCore;
 
 	@Override
-	public void uploadFile(MultipartFile file) throws IOException {
-
+	public FileUploadResponse uploadFile(MultipartFile file) throws IOException {
+		FileUploadResponse response = new FileUploadResponse();
 		if (file != null) {
-			this.fileCore.saveFile(rootLocation, file);
+			try {
+				this.fileCore.saveFile(rootLocation, file);
+				response.setStatus(MinemConstants.RESPONSE_OK);
+				response.setMessage("Se guardó correctamente: "+ file.getOriginalFilename().split("\\+")[1]);
+				return response;
+			} catch (Exception e) {
+				response.setStatus(MinemConstants.RESPONSE_KO);
+				response.setErrorCode("FA-0001");
+				response.setMessage("No se guardó correctamente: "+ file.getOriginalFilename().split("\\+")[1]);
+				return response;
+			}
+		} else {
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("FA-0002");
+			response.setMessage("No se recuperó el archivo adjuntado.");
+			return response;
 		}
-
 	}
 	
 	public void init() {

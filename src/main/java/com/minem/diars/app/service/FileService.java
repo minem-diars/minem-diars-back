@@ -6,10 +6,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.minem.diars.app.model.api.response.ConsultAttachedFileResponse;
+import com.minem.diars.app.model.api.response.FileUploadResponse;
 
 public interface FileService {
 	
-	void uploadFile(MultipartFile file) throws IOException;
+	FileUploadResponse uploadFile(MultipartFile file) throws IOException;
 	
 	void init();
 

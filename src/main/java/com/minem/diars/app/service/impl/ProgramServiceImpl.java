@@ -88,9 +88,9 @@ public class ProgramServiceImpl implements ProgramService {
 	}
 
 	@Override
-	public CheckProgramResponse checkProgram(Integer employeeCode, String role) {
+	public CheckProgramResponse checkProgram(Integer employeeCode, String role, Integer flag) {
 		
-		CheckProgramResponse response = this.programCore.findPrograms(employeeCode, role);
+		CheckProgramResponse response = this.programCore.findPrograms(employeeCode, role, flag);
 
 		if (response != null) {
 			return response;

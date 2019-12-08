@@ -40,8 +40,23 @@ public class ProgramEntity {
 	@Column(name = "transport_cost")
 	private String transportCost;
 	
-	@Column(name = "state", columnDefinition = "integer default 0")
+	@Column(name = "state")
 	private Integer state;
+	
+	@Column(name = "derv_dg")
+	private Integer derv_dg;
+	
+	@Column(name = "derv_ol")
+	private Integer derv_ol;
+	
+	@Column(name = "state_dl")
+	private Integer state_dl;
+	
+	@Column(name = "st_register_file")
+	private Integer st_register_file;
+	
+	@Column(name = "st_ticket_purchase")
+	private Integer st_ticket_purchase;
 	
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_chronogram", nullable = false)

@@ -41,8 +41,10 @@ public class MinemConstants {
 	public static final String HYPHEN = "-";	
 	
 	/* Roles */
-	public static final String ROLE_D_ADMIN = "ROLE_D_ADMIN";
-	public static final String ROLE_V_ADMIN = "ROLE_V_ADMIN";
-	public static final String ROLE_C_ADMIN = "ROLE_C_ADMIN";
+	public static final String ROLE_DGFM = "ROLE_DGFM";
+	public static final String ROLE_VICE = "ROLE_VICE";
+	public static final String ROLE_DLOG = "ROLE_DLOG";
+	public static final String ROLE_OLOG = "ROLE_OLOG";
+	public static final String ROLE_COAD = "ROLE_COAD";
 
 }

@@ -5,7 +5,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.minem.diars.app.core.LoginCore;
+import com.minem.diars.app.model.api.request.CredentialInfoRequest;
+import com.minem.diars.app.model.api.request.CredentialUpdateRequest;
 import com.minem.diars.app.model.api.request.LoginRequest;
+import com.minem.diars.app.model.api.response.CredentialInfoResponse;
+import com.minem.diars.app.model.api.response.CredentialUpdateResponse;
 import com.minem.diars.app.model.api.response.LoginResponse;
 import com.minem.diars.app.model.common.LoginModel;
 import com.minem.diars.app.service.LoginService;
@@ -55,6 +59,16 @@ public class LoginServiceImpl implements LoginService {
 		response.setDescription(LoginConstants.NULL_INFORMATION);
 		
 		return response;
+	}
+
+	@Override
+	public CredentialInfoResponse infoValidate(CredentialInfoRequest request) {
+		return this.loginCore.infoValidate(request);
+	}
+
+	@Override
+	public CredentialUpdateResponse passwordUpdate(CredentialUpdateRequest request) {
+		return this.loginCore.passwordUpdate(request);
 	}
 
 }
