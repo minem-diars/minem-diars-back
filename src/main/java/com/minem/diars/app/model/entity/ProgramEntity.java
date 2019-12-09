@@ -44,19 +44,25 @@ public class ProgramEntity {
 	private Integer state;
 	
 	@Column(name = "derv_dg")
-	private Integer derv_dg;
+	private int derv_dg;
 	
 	@Column(name = "derv_ol")
-	private Integer derv_ol;
+	private int derv_ol;
 	
 	@Column(name = "state_dl")
-	private Integer state_dl;
+	private int state_dl;
 	
 	@Column(name = "st_register_file")
-	private Integer st_register_file;
+	private int st_register_file;
 	
 	@Column(name = "st_ticket_purchase")
-	private Integer st_ticket_purchase;
+	private int st_ticket_purchase;
+	
+	@Column(name = "id_acceptedBy")
+	private Integer acceptedBy;
+	
+	@Column(name = "change_request_flag")
+	private int changeRequestFlag;
 	
 	@OneToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "id_chronogram", nullable = false)
@@ -71,5 +77,10 @@ public class ProgramEntity {
 			cascade = CascadeType.ALL,
 			mappedBy = "program")
 	private TicketPurchaseEntity ticketPurchase;
+	
+	@OneToOne(fetch = FetchType.LAZY,
+			cascade = CascadeType.ALL,
+			mappedBy = "program")
+	private ChangeRequestEntity changeRequest;
 
 }

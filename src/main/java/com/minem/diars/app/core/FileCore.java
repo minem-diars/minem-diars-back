@@ -44,7 +44,8 @@ public class FileCore {
 			
 			try {
 				
-				Path employeDirectory = createEmployeeDirectory(rootLocation, programEnt.getChronogram().getEmployee());
+				Path employeDirectory = createEmployeeDirectory(rootLocation, programEnt, programEnt.getChronogram().getEmployee());
+				
 				
 				if (Files.isExecutable(employeDirectory)) {
 					FileEntity fileEnt = new FileEntity();
@@ -69,12 +70,20 @@ public class FileCore {
 		}
 	}
 	
-	Path createEmployeeDirectory(Path rootLocation, EmployeeEntity employee) throws IOException {
-		String newDirectory = rootLocation.toString()+ "\\" + employee.getIdEmployee();
+	Path createEmployeeDirectory(Path rootLocation, ProgramEntity programEnt, EmployeeEntity employee) throws IOException {
+		String employeeRoot = employee.getIdEmployee().toString().concat("_").concat(employee.getName().concat(employee.getLastname()));
+		String programRoot = "Program_" + programEnt.getIdProgram().toString();
+		String newDirectory = rootLocation.toString()+ "\\" + employeeRoot;
 		Path employeeDirectory = Paths.get(newDirectory);
 		if(!Files.isExecutable(employeeDirectory)) {
-			return Files.createDirectory(employeeDirectory);
+			Files.createDirectory(employeeDirectory);
 		}
+		
+		employeeDirectory = Paths.get(newDirectory, programRoot);
+		if(!Files.isExecutable(employeeDirectory)) {
+			Files.createDirectory(employeeDirectory);
+		}
+		
 		return employeeDirectory;
 		
 	}
@@ -84,11 +93,14 @@ public class FileCore {
 		ProgramEntity programEnt = this.programRepository.findById(programCode).get();
 		if (programEnt != null) {
 			response = new ConsultAttachedFileResponse();
+			response.setEmployeeFullName(programEnt.getChronogram().getEmployee().getFullname());
+			response.setMiningName(programEnt.getChronogram().getMining().getName());
 			Iterator<FileEntity> itr = programEnt.getFiles().iterator();
 			List<AttachedFile> files = new ArrayList<AttachedFile>();
 			while (itr.hasNext()) {
 				AttachedFile file = new AttachedFile();
 				FileEntity fileEnt = itr.next();
+				file.setIdFile(fileEnt.getIdFile());
 				file.setFileName(fileEnt.getFileName());
 				files.add(file);
 			}
@@ -103,7 +115,7 @@ public class FileCore {
 		
 		ProgramEntity programEnt = this.programRepository.findById(programCode).get();
 		
-		if (programEnt.getFiles() != null) {
+		if (programEnt.getFiles() != null) { // borrar if
 			
 			return buildResourceResponse(programEnt.getFiles().iterator(), fileName);
 			
@@ -127,7 +139,7 @@ public class FileCore {
 				}
 			}
 		}
-		return null;
+		return null;	
 	}
 
 }

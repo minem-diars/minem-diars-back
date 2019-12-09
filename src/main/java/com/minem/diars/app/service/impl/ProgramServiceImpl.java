@@ -6,10 +6,14 @@ import org.springframework.stereotype.Service;
 
 import com.minem.diars.app.core.ProgramCore;
 import com.minem.diars.app.model.api.request.ProgramRegisterRequest;
+import com.minem.diars.app.model.api.request.UpdateProgramRequest;
 import com.minem.diars.app.model.api.request.UpdateStateRequest;
+import com.minem.diars.app.model.api.response.AcceptedProgramResponse;
 import com.minem.diars.app.model.api.response.CheckProgramResponse;
+import com.minem.diars.app.model.api.response.ConsultUpdateProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.ProgramRegisterResponse;
+import com.minem.diars.app.model.api.response.UpdateProgramResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
 import com.minem.diars.app.model.api.response.VerifyProgramResponse;
 import com.minem.diars.app.model.common.ProgramModel;
@@ -41,16 +45,21 @@ public class ProgramServiceImpl implements ProgramService {
 	}
 
 	private ProgramRegisterResponse validateLodgingAndTransport(ProgramRegisterRequest request) {
-		if (validateInvalidNumber(request.getLodgingCost()) == null && validateInvalidNumber(request.getTransportCost()) == null) {
+		if (request.getViaticFlag() == 1) {
 			ProgramModel model = this.programCore.saveProgram(request);
 			return validateRegisterStatus(model);
 		} else {
-			ProgramRegisterResponse response = new ProgramRegisterResponse();
-			response = new ProgramRegisterResponse();
-			response.setStatus(MinemConstants.RESPONSE_KO);
-			response.setErrorCode("PG-0004");
-			response.setErrorMessage("Debe ingresar un valor correcto en Hospedaje y Transporte.");
-			return response;
+			if (validateInvalidNumber(request.getLodgingCost()) == null && validateInvalidNumber(request.getTransportCost()) == null) {
+				ProgramModel model = this.programCore.saveProgram(request);
+				return validateRegisterStatus(model);
+			} else {
+				ProgramRegisterResponse response = new ProgramRegisterResponse();
+				response = new ProgramRegisterResponse();
+				response.setStatus(MinemConstants.RESPONSE_KO);
+				response.setErrorCode("PG-0004");
+				response.setErrorMessage("Debe ingresar un valor correcto en Hospedaje y Transporte.");
+				return response;
+			}
 		}
 	}
 	
@@ -140,6 +149,21 @@ public class ProgramServiceImpl implements ProgramService {
 			response.setErrorMessage("Error al obtener programación de viaje.");
 			return response;
 		}
+	}
+
+	@Override
+	public AcceptedProgramResponse consultAcceptedPrograms(Integer dlogCode, Integer empCode) {
+		return this.programCore.consultAcceptedPrograms(dlogCode, empCode);
+	}
+
+	@Override
+	public ConsultUpdateProgramResponse consultForUpdateProgram(Integer programCode, Integer flag) {
+		return this.programCore.consultForUpdateProgram(programCode, flag);
+	}
+
+	@Override
+	public UpdateProgramResponse postUpdateProgram(UpdateProgramRequest request) {
+		return this.programCore.postUpdateProgram(request);
 	}
 
 }

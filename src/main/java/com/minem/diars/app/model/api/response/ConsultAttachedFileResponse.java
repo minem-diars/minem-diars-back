@@ -13,6 +13,8 @@ import lombok.Setter;
 @ToString
 public class ConsultAttachedFileResponse extends RestResponse {
 	
+	private String employeeFullName;
+	private String miningName;
 	private List<AttachedFile> files;
 
 }

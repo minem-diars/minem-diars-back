@@ -11,6 +11,7 @@ public class UpdateStateRequest {
 	
 	private Integer programCode;
 	private String role;
+	private Integer idUserDlog;
 	private Integer state;
 	private Integer derv_dg;
 	private Integer derv_ol;

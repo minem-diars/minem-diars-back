@@ -16,6 +16,7 @@ public class MinemConstants {
 	public static final String EMPLOYEE_SERVICE = "employeeService";
 	public static final String COMMON_SERVICE = "commonService";
 	public static final String TICKET_PURCHASE_SERVICE = "ticketPurchaseService";
+	public static final String CHANGE_REQUEST_SERVICE = "changeRequestService";
 	
 	/* Repository */
 	public static final String EMPLOYEE_REPOSITORY = "employeeRepository";
@@ -28,6 +29,7 @@ public class MinemConstants {
 	public static final String AIRLINE_REPOSITORY = "airlineRepository";
 	public static final String ROLE_REPOSITORY = "roleRepository";
 	public static final String TICKET_PURCHASE_REPOSITORY = "ticketPurchaseRepository";
+	public static final String CHANGE_REQUEST_REPOSITORY = "changeRequestRepository";
 	
 	/* Core */
 	public static final String CHRONOGRAM_CORE = "chronogramCore";
@@ -35,6 +37,7 @@ public class MinemConstants {
 	public static final String COMMON_CORE = "commonCore";
 	public static final String FILE_CORE = "fileCore";
 	public static final String TICKET_PURCHASE_CORE = "ticketPurchaseCore";
+	public static final String CHANGE_REQUEST_CORE = "changeRequestCore";
 	
 	/* Signos */
 	public static final String COMMA = ",";
@@ -46,5 +49,6 @@ public class MinemConstants {
 	public static final String ROLE_DLOG = "ROLE_DLOG";
 	public static final String ROLE_OLOG = "ROLE_OLOG";
 	public static final String ROLE_COAD = "ROLE_COAD";
+	public static final String ROLE_ENOF = "ROLE_ENOF";
 
 }

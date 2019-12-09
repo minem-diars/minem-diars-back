@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import com.minem.diars.app.model.api.request.ProgramRegisterRequest;
+import com.minem.diars.app.model.api.request.UpdateProgramRequest;
 import com.minem.diars.app.model.api.request.UpdateStateRequest;
+import com.minem.diars.app.model.api.response.AcceptedProgramResponse;
 import com.minem.diars.app.model.api.response.CheckProgramResponse;
+import com.minem.diars.app.model.api.response.ConsultUpdateProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
+import com.minem.diars.app.model.api.response.UpdateProgramResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
 import com.minem.diars.app.model.api.response.VerifyProgramResponse;
 import com.minem.diars.app.model.bean.ActivityResponse;
@@ -130,6 +134,9 @@ public class ProgramCore {
 		case MinemConstants.ROLE_COAD:
 			valueOfUser = 5;
 			break;
+		case MinemConstants.ROLE_ENOF:
+			valueOfUser = 6;
+			break;
 		default:
 			return valueOfUser;
 		}
@@ -193,7 +200,7 @@ public class ProgramCore {
 			break;
 		case 5:
 			if (flag == 1) { // reg doc sustento
-				if (programEnt.getState() == 1 && programEnt.getSt_register_file() == 0 && programEnt.getSt_ticket_purchase() == 0) {
+				if (programEnt.getState() == 1 && programEnt.getSt_register_file() == 0	&& programEnt.getSt_ticket_purchase() == 0) {
 					response = new Program();
 					response.setProgramCode(programEnt.getIdProgram());
 					response.setMiningEntity(ent.getMining().getName());
@@ -201,7 +208,7 @@ public class ProgramCore {
 					response.setState(programEnt.getState());
 				}
 			} else if (flag == 2) { // reg ped compra pasaje
-				if (programEnt.getState() == 1 && programEnt.getSt_register_file() == 1 && programEnt.getSt_ticket_purchase() == 0) {
+				if (programEnt.getState() == 1 && programEnt.getSt_register_file() == 1	&& programEnt.getSt_ticket_purchase() == 0) {
 					response = new Program();
 					response.setProgramCode(programEnt.getIdProgram());
 					response.setMiningEntity(ent.getMining().getName());
@@ -210,7 +217,13 @@ public class ProgramCore {
 				}
 			}
 			break;
-
+		case 6:
+			if (programEnt.getState_dl() == 1 && programEnt.getSt_register_file() == 1 && programEnt.getSt_ticket_purchase() == 1 && programEnt.getTicketPurchase().getState() == 2) {
+				response = new Program();
+				response.setProgramCode(programEnt.getIdProgram());
+				response.setMiningEntity(ent.getMining().getName());
+			}
+			break;
 		default:
 			return null;
 		}
@@ -281,6 +294,7 @@ public class ProgramCore {
 			break;
 		case MinemConstants.ROLE_DLOG:
 			programEnt.setState_dl(request.getState_dl());
+			programEnt.setAcceptedBy(request.getIdUserDlog());
 			this.programRepository.save(programEnt);
 			break;
 		case MinemConstants.ROLE_OLOG:
@@ -328,13 +342,112 @@ public class ProgramCore {
 			activityRs.setActivity(detailEnt.getActivity());
 			activityList.add(activityRs);
 		}
-		
 		response.setActivities(activityList);
 	}
 
 	private void buildEmployeeAndMining(VerifyProgramResponse response, ChronogramEntity chronogramEnt) {
 		response.setEmployeeName(chronogramEnt.getEmployee().getFullname());
 		response.setMiningName(chronogramEnt.getMining().getName());
+	}
+
+	public AcceptedProgramResponse consultAcceptedPrograms(Integer dlogCode, Integer empCode) {
+		AcceptedProgramResponse response = new AcceptedProgramResponse();
+		try {
+			EmployeeEntity employeeEnt = this.employeeRepository.findById(empCode).get();
+			response.setEmployeeFullName(employeeEnt.getFullname());
+			
+			Iterator<ChronogramEntity> chronogramItr = employeeEnt.getChronograms().iterator();
+			List<Program> listProgram = buildListResponse(dlogCode, chronogramItr);
+			response.setPrograms(listProgram);
+			response.setStatus(MinemConstants.RESPONSE_OK);
+			return response;
+		} catch (Exception e) {
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			response.setErrorCode("PG-0009");
+			response.setErrorMessage("Ocurrio un error al cargar la información solicitada.");
+			return response;
+		}
+	}
+
+	private List<Program> buildListResponse(Integer dlogCode, Iterator<ChronogramEntity> chronogramItr) {
+		List<Program> listProgram = new ArrayList<>();
+		while (chronogramItr.hasNext()) {
+			ProgramEntity programEnt = chronogramItr.next().getProgram();
+			if (programEnt.getAcceptedBy() == dlogCode && programEnt.getChangeRequestFlag() == 0) {
+				Program program = new Program();
+				program.setProgramCode(programEnt.getIdProgram());
+				program.setMiningEntity(programEnt.getChronogram().getMining().getName());
+				listProgram.add(program);
+			}
+		}
+		return listProgram;
+	}
+
+	public ConsultUpdateProgramResponse consultForUpdateProgram(Integer programCode, Integer flag) {
+		ConsultUpdateProgramResponse response = new ConsultUpdateProgramResponse();
+		try {
+			ProgramEntity programEnt = this.programRepository.findById(programCode).get();
+			
+			response.setEmployeeName(programEnt.getChronogram().getEmployee().getFullname());
+			response.setMiningName(programEnt.getChronogram().getMining().getName());
+			response.setInitialDate(programEnt.getChronogram().getInitialDate());
+			response.setFinalDate(programEnt.getChronogram().getFinalDate());
+			response.setViaticFlag(programEnt.getViaticFlag());
+			response.setLodgingCost(programEnt.getLodgingCost());
+			response.setTransportCost(programEnt.getTransportCost());
+			
+			if (flag != 0) {
+				response.setObservations(programEnt.getChangeRequest().getObservations());	
+			}
+			
+			response.setStatus(MinemConstants.RESPONSE_OK);
+			
+			return response;
+		} catch (Exception e) {
+			
+			response.setStatus(MinemConstants.RESPONSE_KO);
+			
+			response.setErrorCode("PG-0010");
+			response.setErrorMessage("Ocurrio un error al obtener informacion de programacion.");
+			
+			return response;
+		}
+	}
+
+	public UpdateProgramResponse postUpdateProgram(UpdateProgramRequest request) {
+		UpdateProgramResponse response = new UpdateProgramResponse();
+		try {
+			ProgramEntity programEnt = this.programRepository.findById(request.getProgramCode()).get();
+			
+			programEnt.getChangeRequest().setState(1);
+			
+			programEnt.setChangeRequestFlag(2);
+			
+			programEnt.setViaticFlag(request.getViaticFlag());
+			programEnt.setLodgingCost(request.getLodgingCost());
+			programEnt.setTransportCost(request.getTransportCost());
+			
+			ChronogramEntity chronogramEnt = programEnt.getChronogram();
+			chronogramEnt.setInitialDate(request.getInitialDate());
+			chronogramEnt.setFinalDate(request.getFinalDate());
+			
+			programEnt.setChronogram(chronogramEnt);
+			chronogramEnt.setProgram(programEnt);
+			
+			this.chronogramRepository.save(chronogramEnt);
+			
+			response.setStatus(MinemConstants.RESPONSE_OK);
+			response.setMessage("Se actualizó correctamente la programicion");
+			
+			return response;
+		} catch (Exception e) {
+
+			response.setStatus(MinemConstants.RESPONSE_KO);
+
+			response.setErrorCode("PG-0011");
+			response.setErrorMessage("Ocurrio un error al intentar actualizar programacion.");
+			return response;
+		}
 	}
 
 }

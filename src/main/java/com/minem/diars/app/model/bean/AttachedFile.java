@@ -9,6 +9,7 @@ import lombok.ToString;
 @ToString
 public class AttachedFile {
 	
+	private Integer idFile;
 	private String fileName;
 
 }

@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.minem.diars.app.model.api.request.ProgramRegisterRequest;
+import com.minem.diars.app.model.api.request.UpdateProgramRequest;
 import com.minem.diars.app.model.api.request.UpdateStateRequest;
+import com.minem.diars.app.model.api.response.AcceptedProgramResponse;
 import com.minem.diars.app.model.api.response.CheckProgramResponse;
+import com.minem.diars.app.model.api.response.ConsultUpdateProgramResponse;
 import com.minem.diars.app.model.api.response.FindForEvaluateResponse;
 import com.minem.diars.app.model.api.response.ProgramRegisterResponse;
+import com.minem.diars.app.model.api.response.UpdateProgramResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
 import com.minem.diars.app.model.api.response.VerifyProgramResponse;
 import com.minem.diars.app.service.ProgramService;
@@ -54,6 +58,23 @@ public class ProgramController {
 	@GetMapping("verify/{idProgram}")
 	public VerifyProgramResponse verifyProgram(@PathVariable("idProgram") Integer idProgram) {
 		return this.programService.verifyProgram(idProgram);
+	}
+	
+	@GetMapping("consult/accepted/{dlogCode}/{empCode}")
+	public AcceptedProgramResponse consultAcceptedPrograms(@PathVariable("dlogCode") Integer dlogCode,
+															@PathVariable("empCode") Integer empCode) {
+		return this.programService.consultAcceptedPrograms(dlogCode, empCode);
+	}
+	
+	@GetMapping("consult/update/{programCode}/{flag}")
+	public ConsultUpdateProgramResponse consultForUpdateProgram(@PathVariable("programCode") Integer programCode,
+																@PathVariable("flag") Integer flag) {
+		return this.programService.consultForUpdateProgram(programCode, flag);
+	}
+	
+	@PostMapping("update/program")
+	public UpdateProgramResponse postUpdateProgram(@RequestBody UpdateProgramRequest request) {
+		return this.programService.postUpdateProgram(request);
 	}
 
 }
