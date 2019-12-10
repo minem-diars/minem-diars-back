@@ -437,7 +437,7 @@ public class ProgramCore {
 			this.chronogramRepository.save(chronogramEnt);
 			
 			response.setStatus(MinemConstants.RESPONSE_OK);
-			response.setMessage("Se actualizó correctamente la programicion");
+			response.setMessage("Se actualizó correctamente la programacion");
 			
 			return response;
 		} catch (Exception e) {

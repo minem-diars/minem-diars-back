@@ -71,7 +71,7 @@ public class FileCore {
 	}
 	
 	Path createEmployeeDirectory(Path rootLocation, ProgramEntity programEnt, EmployeeEntity employee) throws IOException {
-		String employeeRoot = employee.getIdEmployee().toString().concat("_").concat(employee.getName().concat(employee.getLastname()));
+		String employeeRoot = employee.getIdEmployee().toString().concat("_").concat(employee.getFullname());
 		String programRoot = "Program_" + programEnt.getIdProgram().toString();
 		String newDirectory = rootLocation.toString()+ "\\" + employeeRoot;
 		Path employeeDirectory = Paths.get(newDirectory);

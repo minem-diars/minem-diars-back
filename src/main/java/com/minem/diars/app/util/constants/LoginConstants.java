@@ -7,8 +7,8 @@ public class LoginConstants {
 
 	
 	/* Mensajes a front */
-	public static final String NULL_INFORMATION = "Is not sending information.";
-	public static final String INVALID_INFORMATION = "Invalid username or password.";
-	public static final String VALID_INFORMATION = "Welcome ";
+	public static final String NULL_INFORMATION = "No se ha enviado información.";
+	public static final String INVALID_INFORMATION = "Usuario o contraseña incorrecto.";
+	public static final String VALID_INFORMATION = "Bienvenido ";
 
 }
