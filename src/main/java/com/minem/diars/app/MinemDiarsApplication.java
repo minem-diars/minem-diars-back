@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import com.minem.diars.app.service.FileService;
 import com.minem.diars.app.util.constants.MinemConstants;
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootApplication
-public class MinemDiarsApplication implements CommandLineRunner {
+public class MinemDiarsApplication extends SpringBootServletInitializer implements CommandLineRunner {
 	
 	@Resource
 	@Qualifier(MinemConstants.FILE_SERVICE)
