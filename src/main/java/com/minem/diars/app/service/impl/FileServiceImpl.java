@@ -20,7 +20,7 @@ import com.minem.diars.app.util.constants.MinemConstants;
 @Service(MinemConstants.FILE_SERVICE)
 public class FileServiceImpl implements FileService {
 	
-	private final Path rootLocation = Paths.get("\\livelihoodFiles");
+	private final Path rootLocation = Paths.get("src/main/resources/livelihoodFiles");
 	//livelihoodFiles
 	@Autowired
 	@Qualifier(MinemConstants.FILE_CORE)
