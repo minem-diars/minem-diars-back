@@ -1,18 +1,18 @@
-spring:
-  profiles: dev
-
-  main:
-    allow-bean-definition-overriding: true
-
-  datasource:
-    url: jdbc:mysql://localhost:3306/minem?useTimezone=true&serverTimezone=UTC
-    username: root
-    password: Peru123.
-    driverClassName: com.mysql.cj.jdbc.Driver
-
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL5Dialect
-    show-sql: true
-
-    hibernate:
-      ddl-auto: none
+#spring:
+#  profiles: dev
+#
+#  main:
+#    allow-bean-definition-overriding: true
+#
+#  datasource:
+#    url: jdbc:mysql://localhost:3306/minem?useTimezone=true&serverTimezone=UTC
+#    username: root
+#    password: Peru123.
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#
+#  jpa:
+#    database-platform: org.hibernate.dialect.MySQL5Dialect
+#    show-sql: true
+#
+#    hibernate:
+#      ddl-auto: none
