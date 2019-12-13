@@ -17,6 +17,9 @@ import com.minem.diars.app.model.api.response.FileUploadResponse;
 import com.minem.diars.app.service.FileService;
 import com.minem.diars.app.util.constants.MinemConstants;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service(MinemConstants.FILE_SERVICE)
 public class FileServiceImpl implements FileService {
 	
@@ -50,8 +53,10 @@ public class FileServiceImpl implements FileService {
 	}
 	
 	public void init() {
+		log.info("METODO INIT!");
 		try {
 			if (!Files.isExecutable(rootLocation)) {
+				log.info("Iniciando root!");
 				Files.createDirectory(rootLocation);
 			}
 		} catch (IOException e) {

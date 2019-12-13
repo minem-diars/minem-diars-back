@@ -65,6 +65,7 @@ public class ProgramServiceImpl implements ProgramService {
 	
 	private ProgramRegisterResponse validateInvalidNumber(String input) {
 		try {
+			@SuppressWarnings("unused")
 			Integer logding = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
 			ProgramRegisterResponse response = new ProgramRegisterResponse();
