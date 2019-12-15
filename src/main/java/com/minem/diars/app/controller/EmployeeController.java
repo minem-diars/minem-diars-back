@@ -15,7 +15,7 @@ import com.minem.diars.app.util.constants.MinemConstants;
 
 @RestController
 @RequestMapping("/travel/employee/v1/")
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin(origins = {"http://localhost:4200", "https://minem-diars.github.io"})
 public class EmployeeController {
 
 	@Autowired
