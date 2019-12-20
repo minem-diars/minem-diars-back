@@ -13,6 +13,7 @@ public class LoginModel {
 	
 	private String employeeCode;
 	private String employeeFullName;
+	private String token;
 	private List<String> employeeRol;
 
 }

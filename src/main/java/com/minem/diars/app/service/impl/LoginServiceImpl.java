@@ -39,6 +39,7 @@ public class LoginServiceImpl implements LoginService {
 			response.setDescription(LoginConstants.VALID_INFORMATION.concat(model.getEmployeeFullName()));
 			response.setEmployeeFullName(model.getEmployeeFullName());
 			response.setUserRol(model.getEmployeeRol());
+			response.setToken(model.getToken());
 			response.setStatus(MinemConstants.RESPONSE_OK);
 			
 			return response;

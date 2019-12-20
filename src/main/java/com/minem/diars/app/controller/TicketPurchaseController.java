@@ -21,7 +21,10 @@ import com.minem.diars.app.util.constants.MinemConstants;
 
 @RestController
 @RequestMapping("/travel/ticket/purchase/v1/")
-@CrossOrigin(origins = {"http://localhost:4200", "https://minem-diars.github.io"})
+@CrossOrigin(origins = {
+		MinemConstants.BASE_URL_DESA, 
+		MinemConstants.BASE_URL_HOST
+		})
 public class TicketPurchaseController {
 
 	@Autowired
