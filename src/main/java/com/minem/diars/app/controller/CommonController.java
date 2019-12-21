@@ -13,6 +13,9 @@ import com.minem.diars.app.model.api.response.FindRolesResponse;
 import com.minem.diars.app.service.CommonService;
 import com.minem.diars.app.util.constants.MinemConstants;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/travel/common/v1/")
 @CrossOrigin(origins = {
@@ -38,6 +41,11 @@ public class CommonController {
 	@GetMapping("consult/roles")
 	public FindRolesResponse getRoles() {
 		return this.commonService.findRoles();
+	}
+	
+	@GetMapping("validate/token")
+	public void validateToken() {
+		log.info("Validación de token para acceso a recursos.");
 	}
 
 }

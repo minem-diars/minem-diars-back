@@ -57,16 +57,19 @@ public class LoginCore {
 		String jwt = jwtProvider.generateJwtToken(authentication);
 		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 		
-		return this.buildResponse(jwt, userDetails);
+		CredentialEntity credential = this.credentialRepository.findByUsername(request.getUsername()).get();
+		
+		return this.buildResponse(jwt, userDetails, credential);
 	}
 
-	private LoginModel buildResponse(String jwt, UserDetails userDetails) {
+	private LoginModel buildResponse(String jwt, UserDetails userDetails, CredentialEntity credential) {
 		List<String> roles = obtainRoles(userDetails.getAuthorities());
 		
 		LoginModel response = new LoginModel();
 		
-		response.setEmployeeCode("");
-		response.setEmployeeFullName(userDetails.getUsername());
+		response.setEmployeeCode(credential.getEmployee().getIdEmployee().toString());
+		response.setEmployeeUsername(userDetails.getUsername());
+		response.setEmployeeFullName(credential.getEmployee().getFullname());
 		response.setToken(jwt);
 		response.setEmployeeRol(roles);
 		
