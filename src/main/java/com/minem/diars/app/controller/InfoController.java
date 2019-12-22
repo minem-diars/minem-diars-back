@@ -22,7 +22,7 @@ import com.minem.diars.app.util.constants.MinemConstants;
 		MinemConstants.BASE_URL_DESA, 
 		MinemConstants.BASE_URL_HOST
 		})
-public class LoginController {
+public class InfoController {
 	
 	@Autowired
 	@Qualifier(LoginConstants.SERVICE)

@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.minem.diars.app.model.api.request.CredentialInfoRequest;
@@ -37,6 +38,9 @@ public class LoginCore {
 	
 	@Autowired
 	private JwtProvider jwtProvider;
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@Autowired
 	@Qualifier(MinemConstants.CREDENTIAL_REPOSITORY)
@@ -112,7 +116,7 @@ public class LoginCore {
 		try {
 			EmployeeEntity employeeEnt = this.employeeRepository.findById(request.getEmployeeCode()).get();
 			CredentialEntity credentialEnt = employeeEnt.getCredential();
-			credentialEnt.setPassword(request.getPassword());
+			credentialEnt.setPassword(this.encoder.encode(request.getPassword()));
 			this.credentialRepository.save(credentialEnt);
 			response.setStatus(MinemConstants.RESPONSE_OK);
 			response.setMessage("Se modifico la contraseña correctamente.");

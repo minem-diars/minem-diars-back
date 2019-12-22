@@ -8,15 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.minem.diars.app.util.commons.SecurityAuditorAware;
 import com.minem.diars.app.util.constants.MinemConstants;
 
 @Configuration
 @EnableTransactionManagement
+@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 //@ConfigurationProperties(prefix = "spring")
 public class DatabaseConfig {
 	
@@ -45,6 +49,11 @@ public class DatabaseConfig {
 //    private String ddlAuto;
 //    
     private String packages = MinemConstants.BASE_PACKAGE;
+    
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+    	return new SecurityAuditorAware();
+    }
 
 	@Bean
 	public DataSource dataSource() {
