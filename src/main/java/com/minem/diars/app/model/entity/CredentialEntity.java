@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,12 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,6 +30,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 @Table(name = "credential")
 public class CredentialEntity {
@@ -37,6 +45,22 @@ public class CredentialEntity {
 	
 	@Column(name = "password")
 	private String password;
+	
+	@Column(name = "create_date")
+	@CreatedDate
+	private String createdDate;
+	
+	@Column(name = "last_modified_date")
+	@LastModifiedDate
+	private String lastModifiedDate;
+	
+	@Column(name = "create_by")
+	@CreatedBy
+	private String createdDateBy;
+	
+	@Column(name = "last_modified_by")
+	@LastModifiedBy
+	private String lastModifiedDateBy;
 	
 	@OneToOne(fetch = FetchType.LAZY,
 				cascade = CascadeType.ALL,

@@ -1,12 +1,19 @@
 package com.minem.diars.app.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.minem.diars.app.model.api.request.CredentialInfoRequest;
@@ -17,14 +24,23 @@ import com.minem.diars.app.model.api.response.CredentialUpdateResponse;
 import com.minem.diars.app.model.common.LoginModel;
 import com.minem.diars.app.model.entity.CredentialEntity;
 import com.minem.diars.app.model.entity.EmployeeEntity;
-import com.minem.diars.app.model.entity.RoleEntity;
 import com.minem.diars.app.repository.CredentialRepository;
 import com.minem.diars.app.repository.EmployeeRepository;
+import com.minem.diars.app.security.jwt.JwtProvider;
 import com.minem.diars.app.util.constants.LoginConstants;
 import com.minem.diars.app.util.constants.MinemConstants;
 
 @Component(LoginConstants.CORE)
 public class LoginCore {
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	private JwtProvider jwtProvider;
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@Autowired
 	@Qualifier(MinemConstants.CREDENTIAL_REPOSITORY)
@@ -34,50 +50,41 @@ public class LoginCore {
 	@Qualifier(MinemConstants.EMPLOYEE_REPOSITORY)
 	private EmployeeRepository employeeRepository;
 	
+	
 	public LoginModel findCredentials(LoginRequest request) {
 		
-		CredentialEntity entity = credentialRepository.findByUsername(request.getUsername());
+		Authentication authentication = this.authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
 		
-		if(entity!=null) {
-			
-			return validatePassword(entity, request);
-		}
-		return null;
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 		
+		String jwt = jwtProvider.generateJwtToken(authentication);
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		
+		CredentialEntity credential = this.credentialRepository.findByUsername(request.getUsername()).get();
+		
+		return this.buildResponse(jwt, userDetails, credential);
 	}
 
-	private LoginModel validatePassword(CredentialEntity entity, LoginRequest request) {
-		if(request.getPassword().equals(entity.getPassword())) {
-			return buildResponse(entity);
-			
-		}
-		return null;
+	private LoginModel buildResponse(String jwt, UserDetails userDetails, CredentialEntity credential) {
+		List<String> roles = obtainRoles(userDetails.getAuthorities());
+		
+		LoginModel response = new LoginModel();
+		
+		response.setEmployeeCode(credential.getEmployee().getIdEmployee().toString());
+		response.setEmployeeUsername(userDetails.getUsername());
+		response.setEmployeeFullName(credential.getEmployee().getFullname());
+		response.setToken(jwt);
+		response.setEmployeeRol(roles);
+		
+		return response;
 	}
 
-	private LoginModel buildResponse(CredentialEntity entity) {
-		
-		if(entity == null) {
-			return null;
-		}else {
-			
-			List<String> roles = obtainRoles(entity.getRoles());
-			
-			LoginModel response = new LoginModel();
-			
-			response.setEmployeeCode(entity.getEmployee().getIdEmployee().toString());
-			response.setEmployeeFullName(entity.getEmployee().getFullname());
-			response.setEmployeeRol(roles);
-			
-			return response;
-		}
-		
-	}
-
-	private List<String> obtainRoles(Set<RoleEntity> roles) {
+	private List<String> obtainRoles(Collection<? extends GrantedAuthority> collection) {
 		List<String> response = new ArrayList<String>();
-		Iterator<RoleEntity> itr = roles.iterator();
+		Iterator<? extends GrantedAuthority> itr = collection.iterator();
 		while (itr.hasNext()) {
-			response.add(itr.next().getName());			
+			response.add(itr.next().getAuthority());			
 		}
 		return response;
 	}
@@ -109,7 +116,7 @@ public class LoginCore {
 		try {
 			EmployeeEntity employeeEnt = this.employeeRepository.findById(request.getEmployeeCode()).get();
 			CredentialEntity credentialEnt = employeeEnt.getCredential();
-			credentialEnt.setPassword(request.getPassword());
+			credentialEnt.setPassword(this.encoder.encode(request.getPassword()));
 			this.credentialRepository.save(credentialEnt);
 			response.setStatus(MinemConstants.RESPONSE_OK);
 			response.setMessage("Se modifico la contraseña correctamente.");

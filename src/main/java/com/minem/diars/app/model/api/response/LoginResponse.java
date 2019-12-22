@@ -11,9 +11,12 @@ import lombok.ToString;
 @ToString
 public class LoginResponse extends RestResponse {
 	
-	private String description;
+//	private String description;
 	private String employeeCode;
+	private String employeeUsername;
 	private String employeeFullName;
+	private String type = "Bearer";
+	private String token;
 	private List<String> userRol;
 
 }

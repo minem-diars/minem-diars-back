@@ -36,9 +36,11 @@ public class LoginServiceImpl implements LoginService {
 			
 			response = new LoginResponse();
 			response.setEmployeeCode(model.getEmployeeCode());
-			response.setDescription(LoginConstants.VALID_INFORMATION.concat(model.getEmployeeFullName()));
+			response.setEmployeeUsername(model.getEmployeeUsername());
+//			response.setDescription(LoginConstants.VALID_INFORMATION.concat(model.getEmployeeFullName()));
 			response.setEmployeeFullName(model.getEmployeeFullName());
 			response.setUserRol(model.getEmployeeRol());
+			response.setToken(model.getToken());
 			response.setStatus(MinemConstants.RESPONSE_OK);
 			
 			return response;
@@ -56,7 +58,7 @@ public class LoginServiceImpl implements LoginService {
 	private LoginResponse nullInformation() {
 		LoginResponse response = new LoginResponse();
 		
-		response.setDescription(LoginConstants.NULL_INFORMATION);
+//		response.setDescription(LoginConstants.NULL_INFORMATION);
 		
 		return response;
 	}

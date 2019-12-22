@@ -10,26 +10,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.minem.diars.app.model.api.request.CredentialInfoRequest;
 import com.minem.diars.app.model.api.request.CredentialUpdateRequest;
-import com.minem.diars.app.model.api.request.LoginRequest;
 import com.minem.diars.app.model.api.response.CredentialInfoResponse;
 import com.minem.diars.app.model.api.response.CredentialUpdateResponse;
-import com.minem.diars.app.model.api.response.LoginResponse;
 import com.minem.diars.app.service.LoginService;
 import com.minem.diars.app.util.constants.LoginConstants;
+import com.minem.diars.app.util.constants.MinemConstants;
 
 @RestController
 @RequestMapping("/travel/login/v1/")
-@CrossOrigin(origins = {"http://localhost:4200", "https://minem-diars.github.io"})
-public class LoginController {
+@CrossOrigin(origins = {
+		MinemConstants.BASE_URL_DESA, 
+		MinemConstants.BASE_URL_HOST
+		})
+public class InfoController {
 	
 	@Autowired
 	@Qualifier(LoginConstants.SERVICE)
 	private LoginService loginService;
-	
-	@PostMapping("access")
-	public LoginResponse postValidateAccess(@RequestBody LoginRequest request) {
-		return this.loginService.accessValidate(request);
-	}
 	
 	@PostMapping("validateInfo")
 	public CredentialInfoResponse postValidateInfo(@RequestBody CredentialInfoRequest request) {

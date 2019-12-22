@@ -2,6 +2,7 @@ package com.minem.diars.app.core;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.minem.diars.app.model.api.request.EmployeeRegisterRequest;
@@ -18,6 +19,9 @@ import com.minem.diars.app.util.constants.MinemConstants;
 
 @Component(MinemConstants.EMPLOYEE_CORE)
 public class EmployeeCore {
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@Autowired
 	@Qualifier(MinemConstants.EMPLOYEE_REPOSITORY)
@@ -68,7 +72,7 @@ public class EmployeeCore {
 	private CredentialEntity buildCredentialEntity(CredentialInformation credential) {
 		CredentialEntity credentialEnt = new CredentialEntity();
 		credentialEnt.setUsername(credential.getUsername());
-		credentialEnt.setPassword(credential.getPassword());
+		credentialEnt.setPassword(encoder.encode(credential.getPassword()));
 		
 		return credentialEnt;
 	}

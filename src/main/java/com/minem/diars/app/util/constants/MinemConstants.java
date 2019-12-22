@@ -10,6 +10,10 @@ public class MinemConstants {
 	public static final String HIBERNATE_SHOW_SQL = "hibernate.show_sql";
 	public static final String HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 	
+	/* Urls */
+	public static final String BASE_URL_DESA = "http://localhost:4200";
+	public static final String BASE_URL_HOST = "https://minem-diars.github.io";
+	
 	/* Service */
 	public static final String CHRONOGRAM_SERVICE = "chronogramService";
 	public static final String FILE_SERVICE = "fileService";

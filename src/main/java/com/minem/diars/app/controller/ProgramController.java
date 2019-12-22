@@ -22,11 +22,15 @@ import com.minem.diars.app.model.api.response.UpdateProgramResponse;
 import com.minem.diars.app.model.api.response.UpdateStateResponse;
 import com.minem.diars.app.model.api.response.VerifyProgramResponse;
 import com.minem.diars.app.service.ProgramService;
+import com.minem.diars.app.util.constants.MinemConstants;
 import com.minem.diars.app.util.constants.ProgramConstant;
 
 @RestController
 @RequestMapping("/travel/program/v1/")
-@CrossOrigin(origins = {"http://localhost:4200", "https://minem-diars.github.io"})
+@CrossOrigin(origins = {
+		MinemConstants.BASE_URL_DESA, 
+		MinemConstants.BASE_URL_HOST
+		})
 public class ProgramController {
 	
 	@Autowired
